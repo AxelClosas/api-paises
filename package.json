@@ -1,0 +1,28 @@
+{
+  "name": "api-paises",
+  "version": "1.0.0",
+  "description": "API RESTful de Países. Trabajo final del Modulo 3 de la Diplomatura en Programación Full Stack con Javascript.",
+  "keywords": [
+    "Javascript",
+    "HTML",
+    "EJS",
+    "CSS",
+    "Express"
+  ],
+  "license": "MIT",
+  "author": "Axel Closas <axelclosas13@gmail.com>",
+  "type": "module",
+  "main": "app.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "axios": "^1.11.0",
+    "dotenv": "^17.2.1",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "express-ejs-layouts": "^2.5.1",
+    "method-override": "^3.0.0",
+    "mongoose": "^8.17.1"
+  }
+}
