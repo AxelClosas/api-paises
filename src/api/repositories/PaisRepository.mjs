@@ -18,6 +18,10 @@ class PaisRepository extends IRepository {
     return await Pais.findByIdAndUpdate(id, atributos, { new: true })
   }
 
+  async buscarPorAtributo(atributo, valor) {
+    return await Pais.find({ [atributo]: valor })
+  }
+
   async eliminar(id) {
     return await Pais.findByIdAndDelete(id)
   }
