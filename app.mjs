@@ -1,6 +1,6 @@
 import express from 'express'
 import dotenv from 'dotenv'
-import { conectarBD } from './api/config/dbConfig.mjs'
+import { conectarBD } from './src/api/config/dbConfig.mjs'
 
 
 // Se importa la configuración de nuestra variable de entorno
