@@ -4,8 +4,6 @@ import PaisRepository from "../repositories/PaisRepository.mjs"
 import PaisMolde from '../models/PaisMolde.mjs'
 import {conectarBD} from '../config/dbConfig.mjs'
 
-dotenv.config()
-conectarBD()
 
 async function obtenerDatosAPIOriginal() {
   let respuesta = null
@@ -90,7 +88,7 @@ export async function procesoGuardarPaisesDesdeAPIOriginalEnMongoDB() {
       throw new Error('No hay paises para agregar a la Base de Datos MongoDB')
     }
   } catch (error) {
-    console.log('No se pudo guardar los paises en MongoDB: ', error)
+    throw new Error('No se pudo guardar los paises en MongoDB: ', error.message)
   }
 }
 
