@@ -5,10 +5,10 @@ class PaisRepository extends IRepository {
   async obtenerPorId(id) {
     return await Pais.findById(id)
   }
-  
-  async obtenerTodos() {
-    return await Pais.find({})
-  }
+  // De momento no le encuentro utilidad para la aplicación actual
+  // async obtenerTodos() {
+  //   return await Pais.find({})
+  // }
 
   async agregar(pais) {
     return await Pais.create(pais)
@@ -20,6 +20,10 @@ class PaisRepository extends IRepository {
 
   async buscarPorAtributo(atributo, valor) {
     return await Pais.find({ [atributo]: valor })
+  }
+
+  async buscarPorQuery(query) {
+    return await Pais.find(query)
   }
 
   async eliminar(id) {
