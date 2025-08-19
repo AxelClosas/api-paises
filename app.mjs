@@ -1,9 +1,10 @@
 import express from 'express'
 import dotenv from 'dotenv'
-import { conectarBD } from './api/config/dbConfig.mjs'
 import path from 'path'
 import expressLayouts from 'express-ejs-layouts'
-import paisesRoutes from './api/routes/paisesRoutes.mjs'
+import { conectarBD } from './config/dbConfig.mjs'
+import paisesRoutes from './routes/paisesRoutes.mjs'
+
 // Se importa la configuración de nuestra variable de entorno
 dotenv.config()
 
@@ -20,15 +21,14 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 /* Middleware para servir archivos estáticos */
-app.use(express.static(path.resolve('./src/public')))
+app.use(express.static(path.resolve('./public')))
 
 // Configuramos la ruta para acceder a la api
 app.use('/api', paisesRoutes)
 
 // Se configura EJS como Motor de Vistas
 app.set('view engine', 'ejs')
-app.set('views', path.resolve('./src/views'))
-console.log(path.resolve('./src/views'))
+app.set('views', path.resolve('./views'))
 
 // Se configura expressLayouts
 app.use(expressLayouts)
