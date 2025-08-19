@@ -65,7 +65,7 @@ export async function procesoGuardarPaisesDesdeAPIOriginalEnMongoDB() {
   try {
     const paises = await modelarDatosAPIOriginal()
     if (paises.length > 0) {
-      const paisesEnBD = await filtrarPaisesPorQuery({ nombreApi: 'api-paises', creadoPor: 'Axel Closas'})
+      const paisesEnBD = await obtenerListadoDePaises()
       const paisesNoDuplicados = paises.filter(pais => {
         let esDuplicado = true
         paisesEnBD.forEach(paisBD => {
@@ -93,19 +93,18 @@ export async function procesoGuardarPaisesDesdeAPIOriginalEnMongoDB() {
 }
 
 export async function procesoEliminarPaisesAgregadosEnMongoDB() {
-  const paises = await filtrarPaisesPorQuery({ nombreApi: 'api-paises', creadoPor: 'Axel Closas'})
+  const paises = await obtenerListadoDePaises()
   if (paises.length > 0) {
     let cantPaises = paises.length
-    let paisesEliminados = 0
 
     console.log('Cantidad de países para eliminar:', cantPaises)
-    paises.forEach(async pais => {
-      const paisEliminado = (await eliminarPais(pais._id))
-      if (paisEliminado) paisesEliminados++
-    })
-
-    console.log('Cantidad de países eliminados:', paisesEliminados)
+    paises.forEach( async pais => await eliminarPais( pais._id ) )
   }
+}
+
+export async function obtenerListadoDePaises() {
+  const queryEstandar = { nombreApi: 'api-paises', creadoPor: 'Axel Closas' }
+  return await PaisRepository.buscarPorQuery(queryEstandar)
 }
 
 

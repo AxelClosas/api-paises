@@ -1,9 +1,57 @@
-import { procesoGuardarPaisesDesdeAPIOriginalEnMongoDB } from '../services/paisesServices.mjs'
+// import { procesoGuardarPaisesDesdeAPIOriginalEnMongoDB } from '../services/paisesServices.mjs'
+import { obtenerListadoDePaises, procesoGuardarPaisesDesdeAPIOriginalEnMongoDB, procesoEliminarPaisesAgregadosEnMongoDB } from '../services/paisesServices.mjs'
 
 export async function procesoGuardarPaisesDesdeAPIOriginalEnMongoDBController(req, res) {
+  console.log('📥 HTTP GET /api/cargarPaises - Proceso guardar países desde API Original en MongoDB')
   try {
-    
-  } catch (error) {
+    await procesoGuardarPaisesDesdeAPIOriginalEnMongoDB()
+    console.log('Redirigiendo a /api/paises')
+    setTimeout(async () => await res.redirect('/api/paises'), 1000)
+  } catch (err) {
+    return await res.redirect('/api/paises', { data: [], error: { existe: true , mensaje: err.msg}})
+  }
+}
 
+export async function procesoEliminarPaisesAgregadosEnMongoDBController(req, res) {
+  console.log('📥 HTTP GET /api/cargarPaises - Proceso guardar países desde API Original en MongoDB')
+  try {
+    await procesoEliminarPaisesAgregadosEnMongoDB()
+    console.log('Redirigiendo a /api/paises')
+    setTimeout(async () => await res.redirect('/api/paises'), 1000)
+    
+  } catch (err) {
+    return await res.redirect('/api/paises')
+  }
+}
+
+/* 
+  Estructura base de retorno de contenido en las respuestas
+
+  { // La clave que acompaña el contenido será la misma varible o caso contrario se llamará data que será igual a un array vacío
+    data: Array de Datos o Vacío,
+    error: {
+      existe: true o false,
+      mensaje: "Mensaje del error",
+    }
+  }
+*/
+
+export async function obtenerListadoDePaisesController(req, res) {
+  console.log('📥 HTTP GET /api/paises - Listado de países')
+  try {
+    const paises = await obtenerListadoDePaises()
+
+    if (paises.length) {
+      if (req.accepts('text/html')) {
+        res.render('dashboard', { paises, error: { existe: false, mensaje: '' }})
+      }
+    } else {
+      if (req.accepts('text/html')) {
+        res.render('dashboard', { data: [], error: { existe: true, mensaje: 'Ups... Aún no se cargaron los países.' }})
+      }
+    }
+
+  } catch (error) {
+    console.log(error)
   }
 }
