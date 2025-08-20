@@ -38,16 +38,17 @@ export async function procesoEliminarPaisesAgregadosEnMongoDBController(req, res
 
 export async function obtenerListadoDePaisesController(req, res) {
   console.log('📥 HTTP GET /api/paises - Listado de países')
+  const title = 'Listado de países'
   try {
     const paises = await obtenerListadoDePaises()
 
     if (paises.length) {
       if (req.accepts('text/html')) {
-        res.render('dashboard', { paises, error: { existe: false, mensaje: '' }})
+        res.render('dashboard', { title, paises, error: { existe: false, mensaje: '' }})
       }
     } else {
       if (req.accepts('text/html')) {
-        res.render('dashboard', { data: [], error: { existe: true, mensaje: 'Ups... Aún no se cargaron los países.' }})
+        res.render('dashboard', { title, error: { existe: true, mensaje: 'Ups... Aún no se cargaron los países.' }})
       }
     }
 
