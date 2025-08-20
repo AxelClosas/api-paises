@@ -1,5 +1,49 @@
-<main>
+<% 
+  const obtenerMayorGini = gini => {
+    if (typeof gini !== 'undefined') {
+      const ginis = []
+      for (const [key, value] of gini) {
+        ginis.push(key)
+      }
+      
+      let mayor = 0
+      ginis.forEach(e => {
+        if (Number(e) > mayor) {
+          mayor = e
+        }
+      })
+      
+      return gini.get(mayor)
+    } else {
+      return 'Sin Dato'
+    }
+  }
+
+  const obtenerSumatoriaAtributo = (paises, atributo) => {
+    let sum = 0
+    paises.forEach(pais => sum += pais[atributo] )
+    return sum
+  }
+
+  const obtenerCantidadGini = (paises) => {
+    let cant = 0
+    paises.forEach(pais => {
+      if (obtenerMayorGini(pais.gini)) cant++
+    })
+
+    return cant
+  }
+
+  const sumPoblacion = obtenerSumatoriaAtributo(paises, 'poblacion')
+  const sumArea = obtenerSumatoriaAtributo(paises, 'area')
+  const cantGini = obtenerCantidadGini(paises)
+
+  console.log(sumPoblacion)
+  console.log(sumArea)
+  console.log(cantGini)
   
+%>
+<main>
   <% if (error.existe) { %>
   <p><%= error.mensaje %></p>
   <p>Para cargar los países la Base de Datos haz click en el siguiente botón</p>
@@ -7,7 +51,7 @@
   <% } else { %>
   <p>Para limpiar todos los países de la Base de Datos haz click en el siguiente botón</p>
   <a href="/api/paises/eliminarPaises">Eliminar países</a>
-  <table>
+  <table border="1">
     <thead>
       <th>Bandera</th>
       <th>Nombre oficial</th>
@@ -31,17 +75,37 @@
           <td><%= pais.capital %></td>
           <td><%= pais.continente %></td>
           <td><%= pais.subContinente %></td>
-          <td><%= pais.idiomas %></td>
+          <td>
+            <% pais.idiomas.forEach((valor, clave) => {%>
+              <span><%= valor %></span>
+              <% }) %>
+          </td>
           <td><%= pais.fronteras %></td>
-          <td><%= pais.area %></td>
-          <td><%= pais.mapas %></td>
-          <td><%= pais.poblacion %></td>
-          <td><%= pais.gini %></td>
+          <td><%= pais.area.toLocaleString() %></td>
+          <td>
+            <a href="<%= pais.mapas['googleMaps'] %>" target="_blank">Google Maps</a>
+            <a href="<%= pais.mapas['openStreetMaps'] %>" target="_blank">Open Street Map</a>
+          </td>
+          <td><%= pais.poblacion.toLocaleString() %></td>
+          <td><%= obtenerMayorGini(pais.gini) %></td>
           <td><%= pais.zonasHorarias %></td>
           <td><%= pais.creadoPor %></td>
         </tr>
       <% }) %>
     </tbody>
+    <tfoot>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td>Total Area</td>
+      <td></td>
+      <td>Total Población</td>
+      <td>Promedio gini</td>
+    </tfoot>
   </table>
   <% } %>
 </main>
