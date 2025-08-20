@@ -23,8 +23,6 @@ app.use(express.urlencoded({ extended: true }))
 /* Middleware para servir archivos estáticos */
 app.use(express.static(path.resolve('./public')))
 
-// Configuramos la ruta para acceder a la api
-app.use('/api', paisesRoutes)
 
 // Se configura EJS como Motor de Vistas
 app.set('view engine', 'ejs')
@@ -35,15 +33,23 @@ app.use(expressLayouts)
 app.set('layout', 'layout')
 
 
-
-
 // Conexión a la Base de Datos
 conectarBD()
+
+// Configuramos la ruta para acceder a la api
+app.use('/api', paisesRoutes)
 
 
 app.get('/', (req, res) => {
   res.status(200).render('index', { title: 'Página Principal'})
 })
+
+
+/* Manejo de errores para rutas no encontradas */
+app.use((req, res) => {
+  res.status(404).send( {mensaje: 'Ruta no encontrada' })
+})
+
 
 app.listen(PORT, () => {
   console.log("API PAISES")
