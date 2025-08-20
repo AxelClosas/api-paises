@@ -12,7 +12,7 @@ dotenv.config()
 const app = express()
 
 // Se define el puerto desde la variable de entorno, caso contrario se utiliza el puerto 3001
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT || 3000
 
 // Middleware para trabajar con JSON
 app.use(express.json())
