@@ -1,48 +1,3 @@
-<% 
-  const obtenerMayorGini = gini => {
-    if (typeof gini !== 'undefined') {
-      const ginis = []
-      for (const [key, value] of gini) {
-        ginis.push(key)
-      }
-      
-      let mayor = 0
-      ginis.forEach(e => {
-        if (Number(e) > mayor) {
-          mayor = e
-        }
-      })
-      
-      return gini.get(mayor)
-    } else {
-      return 'Sin Dato'
-    }
-  }
-
-  const obtenerSumatoriaAtributo = (paises, atributo) => {
-    let sum = 0
-    paises.forEach(pais => sum += pais[atributo] )
-    return sum
-  }
-
-  const obtenerCantidadGini = (paises) => {
-    let cant = 0
-    paises.forEach(pais => {
-      if (obtenerMayorGini(pais.gini)) cant++
-    })
-
-    return cant
-  }
-
-  const sumPoblacion = obtenerSumatoriaAtributo(paises, 'poblacion')
-  const sumArea = obtenerSumatoriaAtributo(paises, 'area')
-  const cantGini = obtenerCantidadGini(paises)
-
-  console.log(sumPoblacion)
-  console.log(sumArea)
-  console.log(cantGini)
-  
-%>
 <main>
   <% if (error.existe) { %>
   <p><%= error.mensaje %></p>
@@ -88,7 +43,13 @@
           </td>
           <td><%= pais.poblacion.toLocaleString() %></td>
           <td><%= obtenerMayorGini(pais.gini) %></td>
-          <td><%= pais.zonasHorarias %></td>
+          <td>
+            <ul>
+              <% pais.zonasHorarias.forEach(zona => { %>
+              <li><%= zona %></li>
+              <% }) %>
+            </ul>
+          </td>
           <td><%= pais.creadoPor %></td>
         </tr>
       <% }) %>
@@ -101,10 +62,10 @@
       <td></td>
       <td></td>
       <td></td>
-      <td>Total Area</td>
+      <td>Total de Área: <%= totalArea.toLocaleString() %></td>
       <td></td>
-      <td>Total Población</td>
-      <td>Promedio gini</td>
+      <td>Total de Población: <%= totalPoblacion.toLocaleString() %></td>
+      <td>Promedio Gini: <%= promedioGiniPaises.toFixed(2) %></td>
     </tfoot>
   </table>
   <% } %>
