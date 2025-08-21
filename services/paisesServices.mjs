@@ -10,12 +10,19 @@ async function obtenerDatosAPIOriginal() {
     respuesta = await axios.get(process.env.ENDPOINT_PAISES)
     if (respuesta.status === 200) {
       console.log('Retornando datos originales')
-      return [...respuesta.data.values()]
+      return respuesta.data
     } else {
-      return respuesta = []
+      throw new Error(respuesta)
     }
   } catch (error) {
-    throw Error('Se produjo un error al realizar la petición al endpoint: ', error)
+    if (error.response) {
+      // La respuesta fue hecha y el servidor respondió con un código de estado
+      // que esta fuera del rango de 2xx
+      throw new Error(error.response)
+      console.log('error.response.data: ',error.response.data);
+      console.log('error.response.status: ',error.response.status);
+      console.log('error.response.headers: ',error.response.headers);
+    }
   }
 }
 
@@ -53,7 +60,7 @@ async function modelarDatosAPIOriginal() {
     }
     return paises
   } catch (error) {
-    throw Error('No se pudo completar el modelado de datos:', error)
+    throw new Error(`No se pudo completar el modelado de datos: ${error}`)
   }
 }
 
@@ -85,7 +92,7 @@ export async function procesoGuardarPaisesDesdeAPIOriginalEnMongoDB() {
       throw new Error('No hay paises para agregar a la Base de Datos MongoDB')
     }
   } catch (error) {
-    throw new Error('No se pudo guardar los paises en MongoDB: ', error)
+    throw new Error(`No se pudo guardar los paises en MongoDB: ${error}`)
   }
 }
 

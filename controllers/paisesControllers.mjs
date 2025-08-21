@@ -1,18 +1,18 @@
 // import { procesoGuardarPaisesDesdeAPIOriginalEnMongoDB } from '../services/paisesServices.mjs'
 import { obtenerListadoDePaises, procesoGuardarPaisesDesdeAPIOriginalEnMongoDB, procesoEliminarPaisesAgregadosEnMongoDB, obtenerSumatoriaAtributo, promedioGini, obtenerMayorGini } from '../services/paisesServices.mjs'
 
-export async function procesoGuardarPaisesDesdeAPIOriginalEnMongoDBController(req, res) {
+export async function procesoGuardarPaisesDesdeAPIOriginalEnMongoDBController(req, res, next) {
   console.log('📥 HTTP GET /api/cargarPaises - Proceso guardar países desde API Original en MongoDB')
   try {
     await procesoGuardarPaisesDesdeAPIOriginalEnMongoDB()
     console.log('Redirigiendo a /api/paises')
     setTimeout(async () => await res.redirect('/api/paises'), 1000)
-  } catch (err) {
-    return await res.redirect('/api/paises', { data: [], error: { existe: true , mensaje: err}})
+  } catch (error) {
+    return res.status(500).json(error.response)
   }
 }
 
-export async function procesoEliminarPaisesAgregadosEnMongoDBController(req, res) {
+export async function procesoEliminarPaisesAgregadosEnMongoDBController(req, res, next) {
   console.log('📥 HTTP GET /api/cargarPaises - Proceso guardar países desde API Original en MongoDB')
   try {
     await procesoEliminarPaisesAgregadosEnMongoDB()
@@ -20,7 +20,7 @@ export async function procesoEliminarPaisesAgregadosEnMongoDBController(req, res
     setTimeout(async () => await res.redirect('/api/paises'), 1000)
     
   } catch (err) {
-    return await res.redirect('/api/paises')
+    next(err)
   }
 }
 
@@ -36,7 +36,7 @@ export async function procesoEliminarPaisesAgregadosEnMongoDBController(req, res
   }
 */
 
-export async function obtenerListadoDePaisesController(req, res) {
+export async function obtenerListadoDePaisesController(req, res, next) {
   console.log('📥 HTTP GET /api/paises - Listado de países')
   const title = 'Listado de países'
   try {
@@ -57,6 +57,6 @@ export async function obtenerListadoDePaisesController(req, res) {
     }
 
   } catch (error) {
-    console.log(error)
+    next(error)
   }
 }
