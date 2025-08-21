@@ -1,0 +1,12 @@
+html {
+  box-sizing: border-box;
+}
+* {
+  box-sizing: inherit;
+}
+
+ul, li {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
