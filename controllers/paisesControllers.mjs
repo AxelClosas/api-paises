@@ -1,5 +1,5 @@
 // import { procesoGuardarPaisesDesdeAPIOriginalEnMongoDB } from '../services/paisesServices.mjs'
-import { obtenerListadoDePaises, procesoGuardarPaisesDesdeAPIOriginalEnMongoDB, procesoEliminarPaisesAgregadosEnMongoDB } from '../services/paisesServices.mjs'
+import { obtenerListadoDePaises, procesoGuardarPaisesDesdeAPIOriginalEnMongoDB, procesoEliminarPaisesAgregadosEnMongoDB, obtenerSumatoriaAtributo, promedioGini, obtenerMayorGini } from '../services/paisesServices.mjs'
 
 export async function procesoGuardarPaisesDesdeAPIOriginalEnMongoDBController(req, res) {
   console.log('📥 HTTP GET /api/cargarPaises - Proceso guardar países desde API Original en MongoDB')
@@ -8,7 +8,7 @@ export async function procesoGuardarPaisesDesdeAPIOriginalEnMongoDBController(re
     console.log('Redirigiendo a /api/paises')
     setTimeout(async () => await res.redirect('/api/paises'), 1000)
   } catch (err) {
-    return await res.redirect('/api/paises', { data: [], error: { existe: true , mensaje: err.msg}})
+    return await res.redirect('/api/paises', { data: [], error: { existe: true , mensaje: err}})
   }
 }
 
@@ -43,8 +43,12 @@ export async function obtenerListadoDePaisesController(req, res) {
     const paises = await obtenerListadoDePaises()
 
     if (paises.length) {
+      const totalPoblacion = obtenerSumatoriaAtributo(paises, 'poblacion')
+      const totalArea = obtenerSumatoriaAtributo(paises, 'area')
+      const promedioGiniPaises = promedioGini(paises)
+
       if (req.accepts('text/html')) {
-        res.render('dashboard', { title, paises, error: { existe: false, mensaje: '' }})
+        res.render('dashboard', { title, paises, totalPoblacion, totalArea, promedioGiniPaises, obtenerMayorGini, error: { existe: false, mensaje: '' }})
       }
     } else {
       if (req.accepts('text/html')) {

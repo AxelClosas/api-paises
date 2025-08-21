@@ -1,8 +1,6 @@
-import dotenv from 'dotenv'
 import axios from 'axios'
 import PaisRepository from "../repositories/PaisRepository.mjs"
 import PaisMolde from '../models/PaisMolde.mjs'
-import {conectarBD} from '../config/dbConfig.mjs'
 
 
 async function obtenerDatosAPIOriginal() {
@@ -17,7 +15,7 @@ async function obtenerDatosAPIOriginal() {
       return respuesta = []
     }
   } catch (error) {
-    console.error('No se pudo realizar la petición a la API Original de Países:', error)
+    throw Error('Se produjo un error al realizar la petición al endpoint: ', error)
   }
 }
 
@@ -55,8 +53,7 @@ async function modelarDatosAPIOriginal() {
     }
     return paises
   } catch (error) {
-    console.log('No se pudo completar el modelado de datos:', error)
-    process.exit(-1)
+    throw Error('No se pudo completar el modelado de datos:', error)
   }
 }
 
@@ -76,7 +73,7 @@ export async function procesoGuardarPaisesDesdeAPIOriginalEnMongoDB() {
       })
 
       if (paisesNoDuplicados.length === 0)
-        throw new Error('No se pueden duplicar los registros de los países')
+        throw Error('No se pueden duplicar los registros de los países')
 
       console.log('Agregando paises a la Base de Datos MongoDB')
       console.log('Cantidad de países a agregar:', paisesNoDuplicados.length)
@@ -88,7 +85,7 @@ export async function procesoGuardarPaisesDesdeAPIOriginalEnMongoDB() {
       throw new Error('No hay paises para agregar a la Base de Datos MongoDB')
     }
   } catch (error) {
-    throw new Error('No se pudo guardar los paises en MongoDB: ', error.message)
+    throw new Error('No se pudo guardar los paises en MongoDB: ', error)
   }
 }
 
@@ -101,6 +98,42 @@ export async function procesoEliminarPaisesAgregadosEnMongoDB() {
     paises.forEach( async pais => await eliminarPais( pais._id ) )
   }
 }
+
+export function obtenerMayorGini(gini) {
+  if (typeof gini !== 'undefined') {
+    const ginis = []
+    for (const [key, value] of gini) {
+      ginis.push(Number(key)) // Guardo los años disponibles
+    }    
+    let mayor = 0 // Se declara e inicializa la variable mayor para guardar el último año
+    ginis.forEach(e => e > mayor ? mayor = e : mayor) // Comparo cada elemento con mayor y guardo el más alto
+    
+    return gini.get(String(mayor)) // Casteo a String el año obtenido
+  } else {
+    return 'Sin Dato' // Retorna sin dato en caso de que gini sea undefined
+  }
+}
+export function obtenerCantidadGini(paises) {
+  let cant = 0
+  paises.forEach(pais => typeof obtenerMayorGini(pais.gini) !== 'string' ? cant++ : cant+=0)
+  return cant
+}
+
+export function obtenerSumatoriaAtributo(paises, atributo) {
+  let sum = 0
+  paises.forEach(pais => sum += Number(pais[atributo]) )
+  return sum
+}
+
+export function promedioGini(paises) {
+  let sumGini = 0
+  paises.forEach(pais => typeof obtenerMayorGini(pais.gini) !== 'string' ? sumGini += obtenerMayorGini(pais.gini) : sumGini)
+  const cantGini = obtenerCantidadGini(paises)
+  const promedioGini = cantGini !== 0 ? sumGini / cantGini : 0
+  return promedioGini
+}
+
+
 
 export async function obtenerListadoDePaises() {
   const queryEstandar = { nombreApi: 'api-paises', creadoPor: 'Axel Closas' }
