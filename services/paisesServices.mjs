@@ -3,97 +3,81 @@ import PaisRepository from "../repositories/PaisRepository.mjs"
 import PaisMolde from '../models/PaisMolde.mjs'
 
 
-async function obtenerDatosAPIOriginal() {
-  let respuesta = null
-  try {
-    console.log('Realizando petición al endpoint:', process.env.ENDPOINT_PAISES)
-    respuesta = await axios.get(process.env.ENDPOINT_PAISES)
-    if (respuesta.status === 200) {
-      console.log('Retornando datos originales')
-      return respuesta.data
-    } else {
-      throw new Error(respuesta)
-    }
-  } catch (error) {
-    if (error.response) {
-      // La respuesta fue hecha y el servidor respondió con un código de estado
-      // que esta fuera del rango de 2xx
-      throw new Error(error.response)
-      console.log('error.response.data: ',error.response.data);
-      console.log('error.response.status: ',error.response.status);
-      console.log('error.response.headers: ',error.response.headers);
-    }
-  }
-}
 
-const esUndefined = obj => obj === undefined ? false : true
+async function modelarDatosAPIOriginal({paises, creador}) {
+  const esUndefined = obj => obj === undefined ? false : true
+  console.log('Filtrando paises con idioma español')
+  const paisesConIdiomaEspaniol = paises.filter(pais => pais.languages.hasOwnProperty('spa'))
+  console.log('Cantidad de países con Idioma Español:', paisesConIdiomaEspaniol.length)
+  console.log('Mapeando paises con el Objeto PaisMolde')
 
-async function modelarDatosAPIOriginal() {
-  try {
-    const paises = await obtenerDatosAPIOriginal()
-    if (paises.length) {
-      console.log('Cantidad de países:', paises.length)
-      console.log('Filtrando paises con idioma español')
-      const paisesConIdiomaEspaniol = paises.filter(pais => pais.languages.hasOwnProperty('spa'))
-      console.log('Cantidad de países con Idioma Español:', paisesConIdiomaEspaniol.length)
-
-      console.log('Mapeando paises con el Objeto PaisMolde')
-      const paisesMapeados = paisesConIdiomaEspaniol.map(pais => {
-        return new PaisMolde({
-          nombreOficial: pais.name.nativeName.spa.official,
-          capital: pais.capital,
-          continente: pais.region,
-          subContinente: pais.subregion,
-          idiomas: pais.languages,
-          fronteras: esUndefined(pais.borders) ? pais.borders.map(f => String(f).toUpperCase()) : [],
-          area: Number(pais.area),
-          mapas: pais.maps,
-          poblacion: Number(pais.population),
-          gini: pais.gini,
-          zonasHorarias: pais.timezones,
-          banderas: pais.flags,
-          creadoPor: 'Axel Closas'
-        })
-      })
-      console.log('Cantida de paises mapeados:', paisesMapeados.length)
-      return paisesMapeados
-    }
-    return paises
-  } catch (error) {
-    throw new Error(`No se pudo completar el modelado de datos: ${error}`)
-  }
+  return paisesConIdiomaEspaniol.map(pais => {
+    console.log(pais.name.nativeName.spa.official || pais.name.official)
+    return new PaisMolde({
+      nombreOficial: pais.name.nativeName.spa.official || pais.name.official,
+      capital: pais.capital,
+      continente: pais.region,
+      subContinente: pais.subregion,
+      idiomas: pais.languages,
+      fronteras: esUndefined(pais.borders) ? pais.borders.map(f => String(f).toUpperCase()) : [],
+      area: Number(pais.area),
+      mapas: pais.maps,
+      poblacion: Number(pais.population),
+      gini: pais.gini,
+      zonasHorarias: pais.timezones,
+      banderas: pais.flags,
+      creadoPor: creador
+    })})
 }
 
 
 export async function procesoGuardarPaisesDesdeAPIOriginalEnMongoDB() {
   try {
-    const paises = await modelarDatosAPIOriginal()
-    if (paises.length > 0) {
+    console.log('Realizando petición al endpoint:', process.env.ENDPOINT_PAISES)
+    const response = await axios.get(process.env.ENDPOINT_PAISES)
+    if (response.status === 200) {
+      const paises = await modelarDatosAPIOriginal({paises: response.data, creador: 'Axel Closas'})
+      paises.forEach(pais => console.log('Despues de mapeo:', pais.nombreOficial))
       const paisesEnBD = await obtenerListadoDePaises()
       const paisesNoDuplicados = paises.filter(pais => {
         let esDuplicado = true
-        paisesEnBD.forEach(paisBD => {
-          if (pais.nombreOficial === paisBD.nombreOficial)
-            esDuplicado = false
-        })
+        paisesEnBD.forEach(paisBD => pais.nombreOficial === paisBD.nombreOficial ? esDuplicado = false : esDuplicado = true)
         return esDuplicado
       })
-
+  
       if (paisesNoDuplicados.length === 0)
-        throw Error('No se pueden duplicar los registros de los países')
-
+        throw new Error('No se pueden duplicar los registros de los países')
+      
       console.log('Agregando paises a la Base de Datos MongoDB')
       console.log('Cantidad de países a agregar:', paisesNoDuplicados.length)
+  
       paisesNoDuplicados.forEach( async pais => {
         console.log('Agregando país:', pais.nombreOficial)
         await agregarPais(pais)
       })
-    } else {
-      throw new Error('No hay paises para agregar a la Base de Datos MongoDB')
     }
   } catch (error) {
-    throw new Error(`No se pudo guardar los paises en MongoDB: ${error}`)
+    if(error.response) {
+      // Error del servidor con status
+      throw {
+        status: error.response.status,
+        message: error.response.data?.message || "Error en la API externa"
+      }
+    } else if ( error.request ){
+      // No hubo respuesta
+      throw { 
+        status: 503,
+        message: "No se recibió respuesta del servidor externo"
+      }
+    } else {
+      // Error desconocido
+      throw {
+        status: 500,
+        message: "Error interno al llamar a la API externa",
+      }
+    }
   }
+
 }
 
 export async function procesoEliminarPaisesAgregadosEnMongoDB() {

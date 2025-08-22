@@ -4,6 +4,7 @@ import path from 'path'
 import expressLayouts from 'express-ejs-layouts'
 import { conectarBD } from './config/dbConfig.mjs'
 import paisesRoutes from './routes/paisesRoutes.mjs'
+import methodOverride from 'method-override'
 
 // Se importa la configuración de nuestra variable de entorno
 dotenv.config()
@@ -19,6 +20,9 @@ app.use(express.json())
 
 // Middleware para trabajar con formularios HTML
 app.use(express.urlencoded({ extended: true }))
+
+// Middleware para trabajar con peticiones PUT y DELETE
+app.use(methodOverride('_method'))
 
 /* Middleware para servir archivos estáticos */
 app.use(express.static(path.resolve('./public')))

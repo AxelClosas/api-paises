@@ -1,11 +1,19 @@
 <main>
-  <% if (error.existe) { %>
+  <% if (error.status === 404) { %>
   <p><%= error.mensaje %></p>
   <p>Para cargar los países la Base de Datos haz click en el siguiente botón</p>
-  <a href="/api/paises/cargarPaises">Cargar países</a>
+  <form action="/api/paises/cargarPaises" method="POST">
+    <button type="submit">
+      Cargar países
+    </button>
+  </form>
   <% } else { %>
   <p>Para limpiar todos los países de la Base de Datos haz click en el siguiente botón</p>
-  <a href="/api/paises/eliminarPaises">Eliminar países</a>
+  <form action="/api/paises/eliminarPaises?_method=DELETE" method="POST">
+    <button type="submit">
+      Eliminar países
+    </button>
+  </form>
   <table border="1">
     <thead>
       <th>Bandera</th>
@@ -35,7 +43,13 @@
               <span><%= valor %></span>
               <% }) %>
           </td>
-          <td><%= pais.fronteras %></td>
+          <td>
+            <ul>
+              <% pais.fronteras.forEach(frontera => { %>
+              <li><%= frontera %></li>
+              <% }) %>
+            </ul>
+          </td>
           <td><%= pais.area.toLocaleString() %></td>
           <td>
             <a href="<%= pais.mapas['googleMaps'] %>" target="_blank">Google Maps</a>

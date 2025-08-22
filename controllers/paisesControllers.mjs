@@ -1,18 +1,21 @@
 // import { procesoGuardarPaisesDesdeAPIOriginalEnMongoDB } from '../services/paisesServices.mjs'
 import { obtenerListadoDePaises, procesoGuardarPaisesDesdeAPIOriginalEnMongoDB, procesoEliminarPaisesAgregadosEnMongoDB, obtenerSumatoriaAtributo, promedioGini, obtenerMayorGini } from '../services/paisesServices.mjs'
 
-export async function procesoGuardarPaisesDesdeAPIOriginalEnMongoDBController(req, res, next) {
+export async function procesoGuardarPaisesDesdeAPIOriginalEnMongoDBController(req, res) {
   console.log('📥 HTTP GET /api/cargarPaises - Proceso guardar países desde API Original en MongoDB')
   try {
     await procesoGuardarPaisesDesdeAPIOriginalEnMongoDB()
     console.log('Redirigiendo a /api/paises')
-    setTimeout(async () => await res.redirect('/api/paises'), 1000)
+    setTimeout(async () => await res.redirect('/api/paises'), 1500)
   } catch (error) {
-    return res.status(500).json(error.response)
+    return res.status(error.status).json({
+      error: error.status,
+      mensaje: error.message
+    })
   }
 }
 
-export async function procesoEliminarPaisesAgregadosEnMongoDBController(req, res, next) {
+export async function procesoEliminarPaisesAgregadosEnMongoDBController(req, res) {
   console.log('📥 HTTP GET /api/cargarPaises - Proceso guardar países desde API Original en MongoDB')
   try {
     await procesoEliminarPaisesAgregadosEnMongoDB()
@@ -36,7 +39,7 @@ export async function procesoEliminarPaisesAgregadosEnMongoDBController(req, res
   }
 */
 
-export async function obtenerListadoDePaisesController(req, res, next) {
+export async function obtenerListadoDePaisesController(req, res) {
   console.log('📥 HTTP GET /api/paises - Listado de países')
   const title = 'Listado de países'
   try {
@@ -48,11 +51,20 @@ export async function obtenerListadoDePaisesController(req, res, next) {
       const promedioGiniPaises = promedioGini(paises)
 
       if (req.accepts('text/html')) {
-        res.render('dashboard', { title, paises, totalPoblacion, totalArea, promedioGiniPaises, obtenerMayorGini, error: { existe: false, mensaje: '' }})
+        res.render('dashboard', { title, paises, totalPoblacion, totalArea, promedioGiniPaises, obtenerMayorGini, error: [{}]})
+      } else if (req.accepts('application/json')) {
+        res.status(200).json( { ...paises, totalPoblacion, totalArea, promedioGiniPaises })
+      } else {
+        res.status(406).json( { error: { status: 406, mensaje: "Not Acceptable" }})
       }
+
     } else {
       if (req.accepts('text/html')) {
-        res.render('dashboard', { title, error: { existe: true, mensaje: 'Ups... Aún no se cargaron los países.' }})
+        res.render('dashboard', { title, error: { status: 404, mensaje: 'Ups... Aún no se cargaron los países.' }})
+      } else if (req.accepts('application/json')) {
+        res.status(404).json({ error: { status: 404, mensaje: 'Ups... Aún no se cargaron los países.' } })
+      } else {
+        res.status(406).json( { error: { status: 406, mensaje: "Not Acceptable" }})
       }
     }
 

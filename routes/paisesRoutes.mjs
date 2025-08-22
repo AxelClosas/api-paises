@@ -6,7 +6,7 @@ import { handleValidationErros } from '../middlewares/handleValidationErros.mjs'
 const router = Router()
 
 router.get('/paises', obtenerListadoDePaisesController)
-router.get('/paises/cargarPaises', procesoGuardarPaisesDesdeAPIOriginalEnMongoDBController)
-router.get('/paises/eliminarPaises', procesoEliminarPaisesAgregadosEnMongoDBController)
+router.post('/paises/cargarPaises', procesoGuardarPaisesDesdeAPIOriginalEnMongoDBController)
+router.delete('/paises/eliminarPaises', procesoEliminarPaisesAgregadosEnMongoDBController)
 
 export default router
