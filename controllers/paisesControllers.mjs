@@ -117,6 +117,18 @@ export async function vistaPanelDeControlController(req, res) {
       }
     }
   } catch (error) {
-    
+    return res.status(500).json({
+      estado: 500,
+      mensaje: error.msg
+    })
   }
+}
+
+export async function vistalFormAgregarPaisController(req, res) {
+  const title = 'Agregar Nuevo País'
+  return await res.render('formAgregarPais', { title })
+}
+
+export async function agregarNuevoPaisController(req, res) {
+  
 }

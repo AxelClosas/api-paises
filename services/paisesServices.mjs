@@ -18,7 +18,7 @@ async function modelarDatosAPIOriginal({paises, creador}) {
       capital: pais.capital,
       continente: pais.region,
       subContinente: pais.subregion,
-      idiomas: pais.languages,
+      idiomas: Object.values(pais.languages),
       fronteras: esUndefined(pais.borders) ? pais.borders.map(f => String(f).toUpperCase()) : [],
       area: Number(pais.area),
       mapas: pais.maps,

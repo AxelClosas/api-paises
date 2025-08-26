@@ -5,7 +5,7 @@ const paisSchema = new mongoose.Schema({
   capital: { type: [String], min: 1, minlength: 3, maxlength: 90, required: true },
   continente: { type: String, minlength: 3, maxlength: 90, required: true },
   subContinente: { type: String, minlength: 3, maxlength: 90, required: true },
-  idiomas: { type: Map, of: String },
+  idiomas: [String],
   fronteras: { type: [String], minlength:3, maxlength: 3 },
   area: { type: Number, min: 0, max: 20000000 },
   mapas: { googleMaps: String, openStreetMaps: String },
