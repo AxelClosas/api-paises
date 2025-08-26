@@ -1,5 +1,5 @@
 // import { procesoGuardarPaisesDesdeAPIOriginalEnMongoDB } from '../services/paisesServices.mjs'
-import { obtenerListadoDePaises, procesoGuardarPaisesDesdeAPIOriginalEnMongoDB, procesoEliminarPaisesAgregadosEnMongoDB, obtenerSumatoriaAtributo, promedioGini, obtenerMayorGini } from '../services/paisesServices.mjs'
+import { obtenerListadoDePaises, procesoGuardarPaisesDesdeAPIOriginalEnMongoDB, procesoEliminarPaisesAgregadosEnMongoDB, obtenerSumatoriaAtributo, promedioGini, obtenerMayorGini, cantidadDocumentos } from '../services/paisesServices.mjs'
 
 export async function procesoGuardarPaisesDesdeAPIOriginalEnMongoDBController(req, res) {
   console.log('📥 HTTP GET /api/cargarPaises - Proceso guardar países desde API Original en MongoDB')
@@ -70,5 +70,32 @@ export async function obtenerListadoDePaisesController(req, res) {
 
   } catch (error) {
     next(error)
+  }
+}
+
+export async function vistaPanelDeControlController(req, res) {
+  const title = 'Panel de Control de API Países'
+  try {
+    const cantPaises = await cantidadDocumentos()
+    console.log(cantPaises)
+    if (cantPaises) {
+      if (req.accepts('text/html')) {
+        return await res.render('panelDeControl', { title, cantPaises, error: { status: 200, mensaje: 'Para ver los países entra en el Listado de Países'}})
+      } else if (req.accepts('application/json')) {
+        return await res.status(200).json({ title, cantPaises, error: { status: 200, mensaje: 'Para ver los países realiza una petición GET en /api/paises'}})
+      } else {
+        res.status(406).json( { error: { status: 406, mensaje: "Not Acceptable" }})
+      }
+    } else {
+      if (req.accepts('text/html')) {
+        return await res.render('panelDeControl', { title, cantPaises, error: { status: 404, mensaje: 'Ups... Aún no se cargaron los países.' }})
+      } else if (req.accepts('application/json')) {
+        return await res.status(404).json({ title, cantPaises, error: { status: 404, mensaje: 'Para cargar los países realiza una petición POST a /api/paises/cargarPaises'}})
+      } else {
+        res.status(406).json( { error: { status: 406, mensaje: "Not Acceptable" }})
+      }
+    }
+  } catch (error) {
+    
   }
 }

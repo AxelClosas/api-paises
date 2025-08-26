@@ -18,6 +18,10 @@ class PaisRepository extends IRepository {
     return await Pais.find(query)
   }
 
+  async cantidadDocumentos(query) {
+    return await Pais.countDocuments(query)
+  }
+
   async eliminar(id) {
     return await Pais.findByIdAndDelete(id)
   }

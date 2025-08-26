@@ -137,8 +137,13 @@ export async function agregarPais(pais) {
 }
 
 
-async function filtrarPaisesPorQuery(query) {
+export async function filtrarPaisesPorQuery(query) {
   return await PaisRepository.buscarPorQuery(query)
+}
+
+export async function cantidadDocumentos() {
+  const queryEstandar = { nombreApi: 'api-paises', creadoPor: 'Axel Closas' }
+  return await PaisRepository.cantidadDocumentos(queryEstandar)
 }
 
 export async function eliminarPais(id) {

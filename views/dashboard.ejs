@@ -1,30 +1,19 @@
 <main>
   <% if (error.status === 404) { %>
   <p><%= error.mensaje %></p>
-  <p>Para cargar los países la Base de Datos haz click en el siguiente botón</p>
-  <form action="/api/paises/cargarPaises" method="POST">
-    <button type="submit">
-      Cargar países
-    </button>
-  </form>
+  <p>Para gestionar el listado de países, revisa el <a href="/api/paises/panelDeControl">Panel de Control</a>.</p>
   <% } else { %>
-  <p>Para limpiar todos los países de la Base de Datos haz click en el siguiente botón</p>
-  <form action="/api/paises/eliminarPaises?_method=DELETE" method="POST">
-    <button type="submit">
-      Eliminar países
-    </button>
-  </form>
   <table border="1">
     <thead>
       <th>Bandera</th>
       <th>Nombre oficial</th>
       <th>Capital</th>
-      <th>Continente</th>
-      <th>Sub continente</th>
-      <th>Idiomas</th>
+      <!-- <th>Continente</th>
+      <th>Sub continente</th> -->
+      <!-- <th>Idiomas</th> -->
       <th>Fronteras</th>
       <th>Área</th>
-      <th>Mapas</th>
+      <!-- <th>Mapas</th> -->
       <th>Población</th>
       <th>gini</th>
       <th>Zonas horarias</th>
@@ -36,13 +25,13 @@
           <td><img src="<%= pais.banderas.get('svg') || pais.banderas.get('png') %>" alt="<%= pais.banderas.get('alt') || ''%>" width="50px"></td>
           <td><%= pais.nombreOficial %></td>
           <td><%= pais.capital %></td>
-          <td><%= pais.continente %></td>
-          <td><%= pais.subContinente %></td>
-          <td>
+          <!-- <td><%= pais.continente %></td>
+          <td><%= pais.subContinente %></td> -->
+          <!-- <td>
             <% pais.idiomas.forEach((valor, clave) => {%>
               <span><%= valor %></span>
               <% }) %>
-          </td>
+          </td> -->
           <td>
             <ul>
               <% pais.fronteras.forEach(frontera => { %>
@@ -51,10 +40,10 @@
             </ul>
           </td>
           <td><%= pais.area.toLocaleString() %></td>
-          <td>
+          <!-- <td>
             <a href="<%= pais.mapas['googleMaps'] %>" target="_blank">Google Maps</a>
             <a href="<%= pais.mapas['openStreetMaps'] %>" target="_blank">Open Street Map</a>
-          </td>
+          </td> -->
           <td><%= pais.poblacion.toLocaleString() %></td>
           <td><%= obtenerMayorGini(pais.gini) %></td>
           <td>
@@ -73,13 +62,11 @@
       <td></td>
       <td></td>
       <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
       <td>Total de Área: <%= totalArea.toLocaleString() %></td>
-      <td></td>
       <td>Total de Población: <%= totalPoblacion.toLocaleString() %></td>
       <td>Promedio Gini: <%= promedioGiniPaises.toFixed(2) %></td>
+      <td></td>
+      <td></td>
     </tfoot>
   </table>
   <% } %>
