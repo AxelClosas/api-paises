@@ -2,11 +2,21 @@
 import { obtenerListadoDePaises, procesoGuardarPaisesDesdeAPIOriginalEnMongoDB, procesoEliminarPaisesAgregadosEnMongoDB, obtenerSumatoriaAtributo, promedioGini, obtenerMayorGini, cantidadDocumentos } from '../services/paisesServices.mjs'
 
 export async function procesoGuardarPaisesDesdeAPIOriginalEnMongoDBController(req, res) {
-  console.log('📥 HTTP GET /api/cargarPaises - Proceso guardar países desde API Original en MongoDB')
+  console.log('⬆️ HTTP POST /api/cargarPaises - Proceso guardar países desde API Original en MongoDB')
   try {
     await procesoGuardarPaisesDesdeAPIOriginalEnMongoDB()
-    console.log('Redirigiendo a /api/paises')
-    setTimeout(async () => await res.redirect('/api/paises'), 1500)
+
+    if (req.accepts('text/html')) {
+      console.log('Redirigiendo a /api/paises')
+      setTimeout(async () => await res.redirect('/api/paises'), 1500)
+    } else if (req.accepts('application/json')) {
+      return await res.status(201).json({
+        estado: 201,
+        mensaje: 'Los países fueron agregados con éxito a la Base de Datos.'
+      })
+    } else {
+      return await res.status(406).json({ error: { status: 406, message: 'Not Acceptable'}})
+    }
   } catch (error) {
     return res.status(error.status).json({
       error: error.status,
@@ -16,14 +26,25 @@ export async function procesoGuardarPaisesDesdeAPIOriginalEnMongoDBController(re
 }
 
 export async function procesoEliminarPaisesAgregadosEnMongoDBController(req, res) {
-  console.log('📥 HTTP GET /api/cargarPaises - Proceso guardar países desde API Original en MongoDB')
+  console.log('❌ HTTP DELETE /api/cargarPaises - Proceso eliminar países desde API Original en MongoDB')
   try {
     await procesoEliminarPaisesAgregadosEnMongoDB()
-    console.log('Redirigiendo a /api/paises')
-    setTimeout(async () => await res.redirect('/api/paises'), 1000)
-    
-  } catch (err) {
-    next(err)
+    if (req.accepts('text/html')) {
+      console.log('Redirigiendo a /api/paises')
+      setTimeout(async () => await res.redirect('/api/paises'), 1500)
+    } else if (req.accepts('application/json')) {
+      return res.status(204).json({
+        status: 204,
+        message: 'Los países fueron eliminados con éxito de la Base de Datos.'
+      })
+    } else {
+      return await res.status(406).json({ error: { status: 406, message: 'Not Acceptable'}})
+    }
+  } catch (error) {
+    return res.status(500).json({
+      error: error,
+      mensaje: error.msg
+    }) 
   }
 }
 
@@ -53,7 +74,7 @@ export async function obtenerListadoDePaisesController(req, res) {
       if (req.accepts('text/html')) {
         res.render('dashboard', { title, paises, totalPoblacion, totalArea, promedioGiniPaises, obtenerMayorGini, error: [{}]})
       } else if (req.accepts('application/json')) {
-        res.status(200).json( { ...paises, totalPoblacion, totalArea, promedioGiniPaises })
+        res.status(200).json( [...paises, { totalPoblacion, totalArea, promedioGiniPaises }] )
       } else {
         res.status(406).json( { error: { status: 406, mensaje: "Not Acceptable" }})
       }
@@ -74,10 +95,10 @@ export async function obtenerListadoDePaisesController(req, res) {
 }
 
 export async function vistaPanelDeControlController(req, res) {
+
   const title = 'Panel de Control de API Países'
   try {
     const cantPaises = await cantidadDocumentos()
-    console.log(cantPaises)
     if (cantPaises) {
       if (req.accepts('text/html')) {
         return await res.render('panelDeControl', { title, cantPaises, error: { status: 200, mensaje: 'Para ver los países entra en el Listado de Países'}})

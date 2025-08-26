@@ -34,17 +34,21 @@ async function modelarDatosAPIOriginal({paises, creador}) {
 export async function procesoGuardarPaisesDesdeAPIOriginalEnMongoDB() {
   try {
     console.log('Realizando petición al endpoint:', process.env.ENDPOINT_PAISES)
-    const response = await axios.get(process.env.ENDPOINT_PAISES)
+    const response = await axios.get(process.env.ENDPOINT_PAISES) // Petición get
     if (response.status === 200) {
-      const paises = await modelarDatosAPIOriginal({paises: response.data, creador: 'Axel Closas'})
-      paises.forEach(pais => console.log('Despues de mapeo:', pais.nombreOficial))
-      const paisesEnBD = await obtenerListadoDePaises()
-      const paisesNoDuplicados = paises.filter(pais => {
-        let esDuplicado = true
-        paisesEnBD.forEach(paisBD => pais.nombreOficial === paisBD.nombreOficial ? esDuplicado = false : esDuplicado = true)
-        return esDuplicado
+      const paises = await modelarDatosAPIOriginal({paises: response.data, creador: 'Axel Closas'}) // Aquí se modelan los datos
+      const paisesEnBD = await obtenerListadoDePaises() // Aquí se consulta la lista de países en MongoDB
+      const paisesNoDuplicados = paises.filter(pais => { // Por cada país, voy a mantener aquellos de la API que no se encuentren dentro de MongoDB
+        let mantenerPaisAPI = true
+        for (let i = 0; i < paisesEnBD.length; i++) {
+          if (pais.nombreOficial === paisesEnBD[i].nombreOficial) {
+            console.log(paisesEnBD[i].nombreOficial)
+            mantenerPaisAPI = false
+            break
+          }
+        }
+        return mantenerPaisAPI
       })
-  
       if (paisesNoDuplicados.length === 0)
         throw new Error('No se pueden duplicar los registros de los países')
       
@@ -72,8 +76,8 @@ export async function procesoGuardarPaisesDesdeAPIOriginalEnMongoDB() {
     } else {
       // Error desconocido
       throw {
-        status: 500,
-        message: "Error interno al llamar a la API externa",
+        status: 409,
+        message: "" + error,
       }
     }
   }
@@ -82,12 +86,7 @@ export async function procesoGuardarPaisesDesdeAPIOriginalEnMongoDB() {
 
 export async function procesoEliminarPaisesAgregadosEnMongoDB() {
   const paises = await obtenerListadoDePaises()
-  if (paises.length > 0) {
-    let cantPaises = paises.length
-
-    console.log('Cantidad de países para eliminar:', cantPaises)
-    paises.forEach( async pais => await eliminarPais( pais._id ) )
-  }
+  paises.forEach( async pais => await eliminarPais( pais._id ) )
 }
 
 export function obtenerMayorGini(gini) {

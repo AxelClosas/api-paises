@@ -18,44 +18,49 @@
       <th>gini</th>
       <th>Zonas horarias</th>
       <th>Creado por</th>
+      <th>Acciones</th>
     </thead>
     <tbody>
       <% paises.forEach(pais => { %>
-        <tr>
-          <td><img src="<%= pais.banderas.get('svg') || pais.banderas.get('png') %>" alt="<%= pais.banderas.get('alt') || ''%>" width="50px"></td>
-          <td><%= pais.nombreOficial %></td>
-          <td><%= pais.capital %></td>
-          <!-- <td><%= pais.continente %></td>
-          <td><%= pais.subContinente %></td> -->
-          <!-- <td>
-            <% pais.idiomas.forEach((valor, clave) => {%>
-              <span><%= valor %></span>
-              <% }) %>
-          </td> -->
-          <td>
-            <ul>
-              <% pais.fronteras.forEach(frontera => { %>
-              <li><%= frontera %></li>
-              <% }) %>
-            </ul>
-          </td>
-          <td><%= pais.area.toLocaleString() %></td>
-          <!-- <td>
-            <a href="<%= pais.mapas['googleMaps'] %>" target="_blank">Google Maps</a>
-            <a href="<%= pais.mapas['openStreetMaps'] %>" target="_blank">Open Street Map</a>
-          </td> -->
-          <td><%= pais.poblacion.toLocaleString() %></td>
-          <td><%= obtenerMayorGini(pais.gini) %></td>
-          <td>
-            <ul>
-              <% pais.zonasHorarias.forEach(zona => { %>
-              <li><%= zona %></li>
-              <% }) %>
-            </ul>
-          </td>
-          <td><%= pais.creadoPor %></td>
-        </tr>
-      <% }) %>
+      <tr>
+        <td><img src="<%= pais.banderas.get('svg') || pais.banderas.get('png') %>" alt="<%= pais.banderas.get('alt') || ''%>" width="50px"></td>
+        <td><%= pais.nombreOficial %></td>
+        <td><%= pais.capital %></td>
+        <!-- <td><%= pais.continente %></td>
+        <td><%= pais.subContinente %></td> -->
+        <!-- <td>
+          <% pais.idiomas.forEach((valor, clave) => {%>
+            <span><%= valor %></span>
+            <% }) %>
+        </td> -->
+        <td>
+          <ul>
+            <% pais.fronteras.forEach(frontera => { %>
+            <li><%= frontera %></li>
+            <% }) %>
+          </ul>
+        </td>
+        <td><%= pais.area.toLocaleString() %></td>
+        <!-- <td>
+          <a href="<%= pais.mapas['googleMaps'] %>" target="_blank">Google Maps</a>
+          <a href="<%= pais.mapas['openStreetMaps'] %>" target="_blank">Open Street Map</a>
+        </td> -->
+        <td><%= pais.poblacion.toLocaleString() %></td>
+        <td><%= obtenerMayorGini(pais.gini) %></td>
+        <td>
+          <ul>
+            <% pais.zonasHorarias.forEach(zona => { %>
+            <li><%= zona %></li>
+            <% }) %>
+          </ul>
+        </td>
+        <td><%= pais.creadoPor %></td>
+        <td> <!-- TODO: Agregar actualizar y eliminar -->
+          Editar
+          Eliminar
+        </td>
+      </tr>
+  <% }) %>
     </tbody>
     <tfoot>
       <td></td>

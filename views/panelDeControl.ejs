@@ -10,6 +10,7 @@
   </form>
   <% } else { %>
   <p>Para eliminar todos los países de la Base de Datos haz click en el siguiente botón.</p>
+  <p>Total de países en la Base de Datos: <strong><%= cantPaises %></strong>.</p>
   <p>Completado el proceso serás redirigido al <strong>Listado de Países</strong></p>
   <form action="/api/paises/eliminarPaises?_method=DELETE" method="POST">
     <button type="submit">
