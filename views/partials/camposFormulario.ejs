@@ -1,18 +1,139 @@
-<% 
+<%
+const zonasHorarias = [
+  { id: 1, zonaH: 'UTC-12:00'},
+  { id: 2, zonaH: 'UTC-11:00'},
+  { id: 3, zonaH: 'UTC-10:00'},
+  { id: 4, zonaH: 'UTC-09:30'},
+  { id: 5, zonaH: 'UTC-09:00'},
+  { id: 6, zonaH: 'UTC-08:00'},
+  { id: 7, zonaH: 'UTC-07:00'},
+  { id: 8, zonaH: 'UTC-06:00'},
+  { id: 9, zonaH: 'UTC-05:00'},
+  { id: 10, zonaH: 'UTC-04:00'},
+  { id: 11, zonaH: 'UTC-03:00'},
+  { id: 12, zonaH: 'UTC-02:30'},
+  { id: 13, zonaH: 'UTC-02:00'},
+  { id: 14, zonaH: 'UTC-01:00'},
+  { id: 15, zonaH: 'UTC+00:00'},
+  { id: 16, zonaH: 'UTC+01:00'},
+  { id: 17, zonaH: 'UTC+02:00'},
+  { id: 18, zonaH: 'UTC+03:00'},
+  { id: 19, zonaH: 'UTC+03:30'},
+  { id: 20, zonaH: 'UTC+04:00'},
+  { id: 21, zonaH: 'UTC+04:30'},
+  { id: 22, zonaH: 'UTC+05:00'},
+  { id: 23, zonaH: 'UTC+05:30'},
+  { id: 24, zonaH: 'UTC+05:45'},
+  { id: 25, zonaH: 'UTC+06:00'},
+  { id: 26, zonaH: 'UTC+06:30'},
+  { id: 27, zonaH: 'UTC+07:00'},
+  { id: 28, zonaH: 'UTC+08:00'},
+  { id: 29, zonaH: 'UTC+08:45'},
+  { id: 30, zonaH: 'UTC+09:00'},
+  { id: 31, zonaH: 'UTC+09:30'},
+  { id: 32, zonaH: 'UTC+10:00'},
+  { id: 33, zonaH: 'UTC+10:30'},
+  { id: 34, zonaH: 'UTC+11:00'},
+  { id: 35, zonaH: 'UTC+12:00'},
+  { id: 36, zonaH: 'UTC+12:45'},
+  { id: 37, zonaH: 'UTC+13:00'},
+  { id: 38, zonaH: 'UTC+14:00'},
+]
+
 const camposForm = [
-    { name: 'nombreOficial', label: 'Nombre oficial del País', type: 'text',   required: true, placeholder: 'Ej: República Argentina', min: 3, max: 90 }, // nombreOficial
-    { name: 'capital',       label: 'Capital',                 type: 'text',   required: true, placeholder: 'Ej: Buenos Aires', min: 3, max: 90 }, // capital
-    { name: 'continente',    label: 'Continente',              type: 'text',   required: true, placeholder: 'Ej: América', min: 3, max: 90 },// continente
-    { name: 'subContinente', label: 'Sub Continente',          type: 'text',   required: true, placeholder: 'Ej: América del Sur', min: 3, max: 90 },// subContinente
-    { name: 'idiomas',       label: 'Idiomas',                 type: 'text',   required: false, placeholder: 'Ej: Español' },// idiomas
-    { name: 'fronteras',     label: 'Fronteras',               type: 'text',   required: false, placeholder: 'Ej: BOL, BRA, CHL, PRY, URY' },// fronteras
-    { name: 'area',          label: 'Área',                    type: 'number', required: false, placeholder: 'Ej: 2780400' }, // area
-    { name: 'mapas',         label: 'Mapas',                   type: 'text',   required: false, placeholder: 'Ej: https://goo.gl/maps/cZnCEi5sEMQtKKcB7' }, // mapas
-    { name: 'poblacion',     label: 'Población',               type: 'number', required: false, placeholder: 'Ej: 45376763' },// poblacion
-    { name: 'gini',          label: 'gini',                    type: 'number', required: false, placeholder: 'Ej: 42.9' },  // gini
+    { name: 'nombreOficial', label: 'Nombre oficial del País', type: 'text',     required: true,  placeholder: 'Ej: República Argentina', min: 3, max: 90 }, // nombreOficial
+    { name: 'capital',       label: 'Capital',                 type: 'text',     required: true,  placeholder: 'Ej: Buenos Aires', min: 3, max: 90 }, // capital
+    { name: 'continente',    label: 'Continente',              type: 'text',     required: true,  placeholder: 'Ej: América', min: 3, max: 90 },// continente
+    { name: 'subContinente', label: 'Sub Continente',          type: 'text',     required: true,  placeholder: 'Ej: América del Sur', min: 3, max: 90 },// subContinente
+    { name: 'idiomas',       label: 'Idiomas',                 type: 'text',     required: false, placeholder: 'Ej: Español, Guaraní' },// idiomas
+    { name: 'fronteras',     label: 'Fronteras',               type: 'text',     required: false, placeholder: 'Ej: BOL, BRA, CHL, PRY, URY' },// fronteras
+    { name: 'area',          label: 'Área',                    type: 'number',   required: false, placeholder: 'Ej: 2780400', min: 0 }, // area
+    { name: 'mapas',         label: 'Mapas',                   type: 'text',     required: false, placeholderGoogle: 'Ej: https://goo.gl/maps/cZnCEi5sEMQtKKcB7', placeholderOpenStreetMaps: 'https://www.openstreetmap.org/relation/114686' }, // mapas
+    { name: 'poblacion',     label: 'Población',               type: 'number',   required: false, placeholder: 'Ej: 45376763', min: 0},// poblacion
     { name: 'zonasHorarias', label: 'Zonas Horarias',          type: 'checkbox', required: false, placeholder: 'Ej: UTC-03:00' },  // zonasHorarias
-    { name: 'zonasHorarias'}, // zonasHorarias
-    // banderas
-    // creadoPor
+    { name: 'banderas',      label: 'Banderas',                type: 'text',     required: false, placeholderPNG: 'Ej: https://flagcdn.com/w320/ar.png', placeholderSVG: 'https://flagcdn.com/ar.svg', alt: 'La bandera de Argentina presenta tres franjas horizontales iguales de color azul claro, blanco y azul claro. Un sol dorado con bordes marrones se centra en la franja blanca.'}, // banderas
+    { name: 'creadoPor',     label: 'Creador',                 type: 'text',     required: false, placeholder: 'Ej: Axel Closas' }, // creadoPor
 ]
 %>
+
+
+<% camposForm.forEach(campo => { %>
+<div>
+  <label for="<%= campo.name %>"><%= campo.label %></label>
+  <% if (campo.name === 'banderas') { %>
+  <div>
+    <label for="PNG<%= campo.name %>">PNG</label>
+    <input
+      type="text"
+      id="PNG<%= campo.name %>"
+      name="PNG<%= campo.name %>"
+      placeholder="<%= campo.placeholderPNG %>"
+    >
+  </div>
+  <div>
+    <label for="SVG<%= campo.name %>">SVG</label>
+    <input
+      type="text"
+      id="SVG<%= campo.name %>"
+      name="SVG<%= campo.name %>"
+      placeholder="<%= campo.placeholderSVG %>"
+    >
+  </div>
+  <div>
+    <label for="altMapa<%= campo.name %>">Alt</label>
+    <input
+      type="text"
+      id="altMapa<%= campo.name %>"
+      name="altMapa<%= campo.name %>"
+      placeholder="<%= campo.alt %>"
+    >
+  </div>
+  <% } else if (campo.name === 'mapas') { %>
+    <div>
+      <div>
+        <label for="google<%= campo.name %>">Google Maps</label>
+        <input
+          type="text"
+          id="google<%= campo.name %>"
+          name="google<%= campo.name %>"
+          placeholder="<%= campo.placeholderGoogle %>"
+        >
+      </div>
+      <div>
+        <label for="openStreetMaps<%= campo.name %>">Open Street Maps</label>
+        <input
+        type="text"
+        id="openStreetMaps<%= campo.name %>"
+        name="openStreetMaps<%= campo.name %>"
+        placeholder="<%= campo.placeholderOpenStreetMaps %>"
+        >
+      </div>
+    </div>
+  <% } else if (campo.name === 'zonasHorarias') { %>
+    <div>
+    <% zonasHorarias.forEach(zona => { %>
+      <label for="zona<%= zona.id %>"><%= zona.zonaH %></label>
+      <input
+      id="zona<%= zona.id %>"
+      name="zona[]"
+      type="<%= campo.type %>"
+      value="<%= zona.zonaH %>"
+      >
+      <% }) %>
+    </div>
+  <% } else { %>
+  <input
+      id="<%= campo.name %>"
+      name="<%= campo.name %>"
+      type="<%= campo.type %>"
+      placeholder="<%= campo.placeholder %>"
+      autocomplete="off"
+      <% if (campo.required) { %> required <% } %>
+      <% if (campo.type === 'text' && campo.min !== null) { %> minlength="<%= campo.min %>" <% } %>
+      <% if (campo.type === 'text' && campo.max !== null) { %> maxlength="<%= campo.max %>" <% } %>
+      <% if (campo.type === 'number' && campo.min !== null) { %> min="<%= campo.min %>" <% } %>
+      <% if (campo.type === 'number' && campo.max !== null) { %> max="<%= campo.max %>" <% } %>
+  >
+  <% } %>
+</div>
+<% }) %>

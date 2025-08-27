@@ -130,5 +130,5 @@ export async function vistalFormAgregarPaisController(req, res) {
 }
 
 export async function agregarNuevoPaisController(req, res) {
-  
+  console.log(req.body)
 }
