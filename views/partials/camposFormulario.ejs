@@ -66,7 +66,7 @@ const camposForm = [
     <input
       type="text"
       id="PNG<%= campo.name %>"
-      name="PNG<%= campo.name %>"
+      name="banderas[][png]"
       placeholder="<%= campo.placeholderPNG %>"
     >
   </div>
@@ -75,7 +75,7 @@ const camposForm = [
     <input
       type="text"
       id="SVG<%= campo.name %>"
-      name="SVG<%= campo.name %>"
+      name="banderas[][svg]"
       placeholder="<%= campo.placeholderSVG %>"
     >
   </div>
@@ -84,7 +84,7 @@ const camposForm = [
     <input
       type="text"
       id="altMapa<%= campo.name %>"
-      name="altMapa<%= campo.name %>"
+      name="banderas[][alt]"
       placeholder="<%= campo.alt %>"
     >
   </div>
@@ -95,7 +95,7 @@ const camposForm = [
         <input
           type="text"
           id="google<%= campo.name %>"
-          name="google<%= campo.name %>"
+          name="mapas[][googleMaps]"
           placeholder="<%= campo.placeholderGoogle %>"
         >
       </div>
@@ -104,7 +104,7 @@ const camposForm = [
         <input
         type="text"
         id="openStreetMaps<%= campo.name %>"
-        name="openStreetMaps<%= campo.name %>"
+        name="maps[][openStreetMaps]"
         placeholder="<%= campo.placeholderOpenStreetMaps %>"
         >
       </div>
@@ -127,7 +127,7 @@ const camposForm = [
       name="<%= campo.name %>"
       type="<%= campo.type %>"
       placeholder="<%= campo.placeholder %>"
-      autocomplete="off"
+      
       <% if (campo.required) { %> required <% } %>
       <% if (campo.type === 'text' && campo.min !== null) { %> minlength="<%= campo.min %>" <% } %>
       <% if (campo.type === 'text' && campo.max !== null) { %> maxlength="<%= campo.max %>" <% } %>

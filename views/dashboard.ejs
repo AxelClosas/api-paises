@@ -23,7 +23,7 @@
     <tbody>
       <% paises.forEach(pais => { %>
       <tr>
-        <td><img src="<%= pais.banderas.get('svg') || pais.banderas.get('png') %>" alt="<%= pais.banderas.get('alt') || ''%>" width="50px"></td>
+        <td><img src="<%= pais.banderas.get('svg') || pais.banderas.get('png') || ''%>" alt="<%= pais.banderas.get('alt') || 'No hay bandera disponible'%>" width="50px"></td>
         <td><%= pais.nombreOficial %></td>
         <td><%= pais.capital %></td>
         <!-- <td><%= pais.continente %></td>

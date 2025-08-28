@@ -90,7 +90,10 @@ export async function obtenerListadoDePaisesController(req, res) {
     }
 
   } catch (error) {
-    next(error)
+    return res.status(500).json({
+      estado: 500,
+      mensaje: error.msg
+    })
   }
 }
 
@@ -130,5 +133,5 @@ export async function vistalFormAgregarPaisController(req, res) {
 }
 
 export async function agregarNuevoPaisController(req, res) {
-  console.log(req.body)
+  return await res.json(req.body)
 }
