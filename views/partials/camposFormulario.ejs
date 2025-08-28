@@ -45,14 +45,15 @@ const camposForm = [
     { name: 'capital',       label: 'Capital',                 type: 'text',     required: true,  placeholder: 'Ej: Buenos Aires', min: 3, max: 90 }, // capital
     { name: 'continente',    label: 'Continente',              type: 'text',     required: true,  placeholder: 'Ej: América', min: 3, max: 90 },// continente
     { name: 'subContinente', label: 'Sub Continente',          type: 'text',     required: true,  placeholder: 'Ej: América del Sur', min: 3, max: 90 },// subContinente
-    { name: 'idiomas',       label: 'Idiomas',                 type: 'text',     required: false, placeholder: 'Ej: Español, Guaraní' },// idiomas
-    { name: 'fronteras',     label: 'Fronteras',               type: 'text',     required: false, placeholder: 'Ej: BOL, BRA, CHL, PRY, URY' },// fronteras
-    { name: 'area',          label: 'Área',                    type: 'number',   required: false, placeholder: 'Ej: 2780400', min: 0 }, // area
-    { name: 'mapas',         label: 'Mapas',                   type: 'text',     required: false, placeholderGoogle: 'Ej: https://goo.gl/maps/cZnCEi5sEMQtKKcB7', placeholderOpenStreetMaps: 'https://www.openstreetmap.org/relation/114686' }, // mapas
-    { name: 'poblacion',     label: 'Población',               type: 'number',   required: false, placeholder: 'Ej: 45376763', min: 0},// poblacion
-    { name: 'zonasHorarias', label: 'Zonas Horarias',          type: 'checkbox', required: false, placeholder: 'Ej: UTC-03:00' },  // zonasHorarias
-    { name: 'banderas',      label: 'Banderas',                type: 'text',     required: false, placeholderPNG: 'Ej: https://flagcdn.com/w320/ar.png', placeholderSVG: 'https://flagcdn.com/ar.svg', alt: 'La bandera de Argentina presenta tres franjas horizontales iguales de color azul claro, blanco y azul claro. Un sol dorado con bordes marrones se centra en la franja blanca.'}, // banderas
-    { name: 'creadoPor',     label: 'Creador',                 type: 'text',     required: false, placeholder: 'Ej: Axel Closas' }, // creadoPor
+    { name: 'idiomas',       label: 'Idiomas',                 type: 'text',     required: true,  placeholder: 'Ej: Español, Guaraní' },// idiomas
+    { name: 'fronteras',     label: 'Fronteras',               type: 'text',     required: true,  placeholder: 'Ej: BOL, BRA, CHL, PRY, URY' },// fronteras
+    { name: 'area',          label: 'Área',                    type: 'number',   required: true,  placeholder: 'Ej: 2780400', min: 0 }, // area
+    { name: 'mapas',         label: 'Mapas',                   type: 'text',     required: true,  placeholderGoogle: 'Ej: https://goo.gl/maps/cZnCEi5sEMQtKKcB7', placeholderOpenStreetMaps: 'https://www.openstreetmap.org/relation/114686' }, // mapas
+    { name: 'poblacion',     label: 'Población',               type: 'number',   required: true,  placeholder: 'Ej: 45376763', min: 0},// poblacion
+    { name: 'gini',          label: 'GINI',                    type: 'number',   required: false, placeholderAnio: 'Ej: 2024', placeholderValor: 'Ej: 45.4', min: 0},// poblacion
+    { name: 'zonasHorarias', label: 'Zonas Horarias',          type: 'checkbox', required: true,  placeholder: 'Ej: UTC-03:00' },  // zonasHorarias
+    { name: 'banderas',      label: 'Banderas',                type: 'text',     required: true,  placeholderPNG: 'Ej: https://flagcdn.com/w320/ar.png', placeholderSVG: 'https://flagcdn.com/ar.svg', alt: 'La bandera de Argentina presenta tres franjas horizontales iguales de color azul claro, blanco y azul claro. Un sol dorado con bordes marrones se centra en la franja blanca.'}, // banderas
+    { name: 'creadoPor',     label: 'Creador',                 type: 'text',     required: true,  placeholder: 'Ej: Axel Closas' }, // creadoPor
 ]
 %>
 
@@ -60,7 +61,33 @@ const camposForm = [
 <% camposForm.forEach(campo => { %>
 <div>
   <label for="<%= campo.name %>"><%= campo.label %></label>
-  <% if (campo.name === 'banderas') { %>
+  <% if (campo.name === 'gini') { %>
+  <div id="contenedor-gini">
+    <div class="item-gini">
+      <label for="gini[0][anio]">Año</label>
+      <input
+        type="<%= campo.type %>"
+        id="gini[0][anio]"
+        name="gini[0][anio]"
+        placeholder="<%= campo.placeholderAnio %>"
+        <% if (campo.required) { %>
+        required
+        <% } %>
+        >
+      <label for="gini[0][valor]">Valor</label>
+      <input
+        type="<%= campo.type %>"
+        step="0.1"
+        id="gini[0][valor]"
+        name="gini[0][valor]"
+        placeholder="<%= campo.placeholderValor %>"
+        <% if (campo.required) { %>
+        required
+        <% } %>
+        >
+    </div>
+  </div>
+  <% } else if (campo.name === 'banderas') { %>
   <div>
     <label for="PNG<%= campo.name %>">PNG</label>
     <input
@@ -104,7 +131,7 @@ const camposForm = [
         <input
         type="text"
         id="openStreetMaps<%= campo.name %>"
-        name="maps[][openStreetMaps]"
+        name="mapas[][openStreetMaps]"
         placeholder="<%= campo.placeholderOpenStreetMaps %>"
         >
       </div>
@@ -127,8 +154,9 @@ const camposForm = [
       name="<%= campo.name %>"
       type="<%= campo.type %>"
       placeholder="<%= campo.placeholder %>"
-      
-      <% if (campo.required) { %> required <% } %>
+      <% if (campo.required) { %>
+      required
+      <% } %>
       <% if (campo.type === 'text' && campo.min !== null) { %> minlength="<%= campo.min %>" <% } %>
       <% if (campo.type === 'text' && campo.max !== null) { %> maxlength="<%= campo.max %>" <% } %>
       <% if (campo.type === 'number' && campo.min !== null) { %> min="<%= campo.min %>" <% } %>

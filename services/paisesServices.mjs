@@ -37,6 +37,7 @@ export async function procesoGuardarPaisesDesdeAPIOriginalEnMongoDB() {
     const response = await axios.get(process.env.ENDPOINT_PAISES) // Petición get
     if (response.status === 200) {
       const paises = await modelarDatosAPIOriginal({paises: response.data, creador: 'Axel Closas'}) // Aquí se modelan los datos
+      paises.forEach(pais => console.log(pais))
       const paisesEnBD = await obtenerListadoDePaises() // Aquí se consulta la lista de países en MongoDB
       const paisesNoDuplicados = paises.filter(pais => { // Por cada país, voy a mantener aquellos de la API que no se encuentren dentro de MongoDB
         let mantenerPaisAPI = true
