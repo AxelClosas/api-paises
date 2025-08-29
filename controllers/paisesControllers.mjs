@@ -1,4 +1,7 @@
 // import { procesoGuardarPaisesDesdeAPIOriginalEnMongoDB } from '../services/paisesServices.mjs'
+import Pais from '../models/Pais.mjs'
+import PaisMolde from '../models/PaisMolde.mjs'
+import PaisRepository from '../repositories/PaisRepository.mjs'
 import { obtenerListadoDePaises, procesoGuardarPaisesDesdeAPIOriginalEnMongoDB, procesoEliminarPaisesAgregadosEnMongoDB, obtenerSumatoriaAtributo, promedioGini, obtenerMayorGini, cantidadDocumentos } from '../services/paisesServices.mjs'
 
 export async function procesoGuardarPaisesDesdeAPIOriginalEnMongoDBController(req, res) {
@@ -122,7 +125,7 @@ export async function vistaPanelDeControlController(req, res) {
   } catch (error) {
     return res.status(500).json({
       estado: 500,
-      mensaje: error.msg
+      mensaje: error.message
     })
   }
 }
@@ -133,5 +136,29 @@ export async function vistalFormAgregarPaisController(req, res) {
 }
 
 export async function agregarNuevoPaisController(req, res) {
-  return await res.json(req.body)
+  try {
+    const paisEnBD = await PaisRepository.buscarPorQuery({nombreOficial: req.body.nombreOficial})
+    if (paisEnBD.length !== 0)
+      throw {
+        status: 409,
+        message: 'Conflicto. El país ingresado ya existe en la Base de Datos.'
+      }
+
+    const nuevoPais = new PaisMolde(req.body)
+    const resultado = await PaisRepository.agregar(nuevoPais)
+
+    if (req.accepts('text/html')) {
+      return await res.redirect('/api/paises')
+    } else if (req.accepts('application/json')) {
+      return await res.status(200).json(resultado)
+    } else {
+      res.status(406).json( { error: { status: 406, mensaje: "Not Acceptable" }})
+    }
+
+  } catch (error) {
+    return res.status(500).json({
+      estado: error.status,
+      mensaje: error.message
+    })
+  }
 }

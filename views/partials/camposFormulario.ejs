@@ -46,7 +46,7 @@ const camposForm = [
     { name: 'continente',    label: 'Continente',              type: 'text',     required: true,  placeholder: 'Ej: América', min: 3, max: 90 },// continente
     { name: 'subContinente', label: 'Sub Continente',          type: 'text',     required: true,  placeholder: 'Ej: América del Sur', min: 3, max: 90 },// subContinente
     { name: 'idiomas',       label: 'Idiomas',                 type: 'text',     required: true,  placeholder: 'Ej: Español, Guaraní' },// idiomas
-    { name: 'fronteras',     label: 'Fronteras',               type: 'text',     required: true,  placeholder: 'Ej: BOL, BRA, CHL, PRY, URY' },// fronteras
+    { name: 'fronteras',     label: 'Fronteras',               type: 'text',     required: false,  placeholder: 'Ej: BOL, BRA, CHL, PRY, URY' },// fronteras
     { name: 'area',          label: 'Área',                    type: 'number',   required: true,  placeholder: 'Ej: 2780400', min: 0 }, // area
     { name: 'mapas',         label: 'Mapas',                   type: 'text',     required: true,  placeholderGoogle: 'Ej: https://goo.gl/maps/cZnCEi5sEMQtKKcB7', placeholderOpenStreetMaps: 'https://www.openstreetmap.org/relation/114686' }, // mapas
     { name: 'poblacion',     label: 'Población',               type: 'number',   required: true,  placeholder: 'Ej: 45376763', min: 0},// poblacion
@@ -93,7 +93,7 @@ const camposForm = [
     <input
       type="text"
       id="PNG<%= campo.name %>"
-      name="banderas[][png]"
+      name="banderas[png]"
       placeholder="<%= campo.placeholderPNG %>"
     >
   </div>
@@ -102,7 +102,7 @@ const camposForm = [
     <input
       type="text"
       id="SVG<%= campo.name %>"
-      name="banderas[][svg]"
+      name="banderas[svg]"
       placeholder="<%= campo.placeholderSVG %>"
     >
   </div>
@@ -111,7 +111,7 @@ const camposForm = [
     <input
       type="text"
       id="altMapa<%= campo.name %>"
-      name="banderas[][alt]"
+      name="banderas[alt]"
       placeholder="<%= campo.alt %>"
     >
   </div>
@@ -122,7 +122,7 @@ const camposForm = [
         <input
           type="text"
           id="google<%= campo.name %>"
-          name="mapas[][googleMaps]"
+          name="mapas[googleMaps]"
           placeholder="<%= campo.placeholderGoogle %>"
         >
       </div>
@@ -131,7 +131,7 @@ const camposForm = [
         <input
         type="text"
         id="openStreetMaps<%= campo.name %>"
-        name="mapas[][openStreetMaps]"
+        name="mapas[openStreetMaps]"
         placeholder="<%= campo.placeholderOpenStreetMaps %>"
         >
       </div>

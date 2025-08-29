@@ -5,7 +5,7 @@ import { vistaPanelDeControlController, vistalFormAgregarPaisController } from '
 import { agregarNuevoPaisController } from '../controllers/paisesControllers.mjs'
 import { sanitizarPeticionBody } from '../middlewares/sanitizadorGlobal.mjs'
 import { parseStringToArray } from '../middlewares/parseStringToArray.mjs'
-import { parseArrayToObject } from '../middlewares/parseArrayToObject.mjs'
+import { parseGiniToValidObject } from '../middlewares/parseGiniToValidObject.mjs'
 import { agregarValidationRules } from '../middlewares/validationRules.mjs'
 import { handleValidationErros } from '../middlewares/handleValidationErros.mjs'
 
@@ -14,7 +14,7 @@ const router = Router()
 
 router.get('/paises', obtenerListadoDePaisesController)
 router.post('/paises/cargarPaises', procesoGuardarPaisesDesdeAPIOriginalEnMongoDBController)
-router.post('/paises/nuevoPais', parseStringToArray, parseArrayToObject, sanitizarPeticionBody, agregarValidationRules(), handleValidationErros, agregarNuevoPaisController)
+router.post('/paises/nuevoPais', parseStringToArray, parseGiniToValidObject, sanitizarPeticionBody, agregarValidationRules(), handleValidationErros, agregarNuevoPaisController)
 router.delete('/paises/eliminarPaises', procesoEliminarPaisesAgregadosEnMongoDBController)
 
 

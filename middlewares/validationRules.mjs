@@ -38,7 +38,7 @@ export const agregarValidationRules = (req, res) => [
     .isString().withMessage('Cada fronteras debe ser una cadena de texto')
     .trim()
     .notEmpty().withMessage('Las fronteras no pueden estar vacíos.')
-    .isLength( {min: 3, max: 3} ).withMessage('La sigla de la frontera debe tener 31 caracteres.'),
+    .isLength( {min: 3, max: 3} ).withMessage('La sigla de la frontera debe tener 3 caracteres.'),
 
   body('area')
   .notEmpty().withMessage('El área del País es requerida.')
@@ -56,24 +56,17 @@ export const agregarValidationRules = (req, res) => [
     .isInt({min: 0}).withMessage('Solo se pueden ingresar valores enteros positivos.'),
 
   body('gini')
-  .exists().withMessage('El objeto gini es requerido')
-  .isObject().withMessage('Gini debe ser un objeto')
+  .optional()
   .custom((value) => {
-    // Verificar que no esté vacío
-    if (Object.keys(value).length === 0) {
-      throw new Error('El objeto gini no puede estar vacío')
-    }
-    
     // Verificar que todos los valores sean números
-    for (const [key, val] of Object.entries(value)) {
-      if (typeof val !== 'number') {
+    for (const [key, val] of Object.entries(value)) { // Por cada llave-valor de las entradas del objeto
+      if (typeof val !== 'number') { // Si el tipo de val es distinto de number, retorna el error.
         throw new Error(`El valor de ${key} debe ser un número`)
       }
-      if (val < 0 || val > 100) {
+      if (val < 0 || val > 100) { // Si el valor es menor a 0 o mayor a 100 retorna el error.
         throw new Error(`El valor de ${key} debe estar entre 0 y 100`)
       }
     }
-
     return true
   }),
 
@@ -95,42 +88,13 @@ export const agregarValidationRules = (req, res) => [
       return true
     }),
   body('banderas.png')
-    .isURL().withMessage('La URL PNG debe ser una URL válida')
-    .custom(value => {
-      if (!value.toLowerCase().endsWith('.png')) {
-        throw new Error('La URL PNG debe apuntar a un archivo .png');
-      }
-      return true;
-    }),
+    .optional(),
   
   body('banderas.svg')
-  .isURL().withMessage('La URL SVG debe ser una URL válida')
-  .custom(value => {
-    if (!value.toLowerCase().endsWith('.svg')) {
-      throw new Error('La URL SVG debe apuntar a un archivo .svg');
-    }
-    return true;
-  }),
+  .optional(),
 
   body('creadoPor')
     .trim()
     .escape()
     .notEmpty().withMessage('El nombre del creador es requerido')
 ]
-/*
-  nombreOficial: { type: String, minlength: 3, maxlength: 90, required: true },
-  capital: { type: [String], min: 1, minlength: 3, maxlength: 90, required: true },
-  continente: { type: String, minlength: 3, maxlength: 90, required: true },
-  subContinente: { type: String, minlength: 3, maxlength: 90, required: true },
-  idiomas: { type:[String], required: true },
-  fronteras: { type: [String], minlength:3, maxlength: 3 },
-  area: { type: Number, min: 0, required: true },
-  mapas: { googleMaps: { type: String, required: true }, openStreetMaps: { type: String, required: true } },
-  poblacion: { type: Number, min: 0, required: true },
-  gini: { type: Map, of: Number, required: true },
-  zonasHorarias: {type: [String], required: true },
-  banderas: { type: Map, of: String, required: true },
-  creadoPor: { type: String, required: true },
-  nombreApi: { type: String, default: 'api-paises', required: true },
-  fechaCreacion: { type: Date, default: Date.now }
-*/
