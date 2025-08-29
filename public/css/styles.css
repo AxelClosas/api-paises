@@ -17,12 +17,12 @@ body {
     }
   
     @media (width >= 1024px) {
-      max-width: 60%;
+      max-width: 70%;
     }
   
 
     @media (width >= 1280px) {
-      max-width: 50%;
+      max-width: 70%;
     }
   }
 }
