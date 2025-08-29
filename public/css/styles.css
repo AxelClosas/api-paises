@@ -1,12 +1,279 @@
 html {
   box-sizing: border-box;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 * {
   box-sizing: inherit;
+}
+body {
+  padding: 0;
+  margin: 0;
+  position: relative;
+  & main {
+    margin: 0 auto;
+
+    @media (width >= 768px) {
+      max-width: 80%;
+    }
+  
+    @media (width >= 1024px) {
+      max-width: 60%;
+    }
+  
+
+    @media (width >= 1280px) {
+      max-width: 50%;
+    }
+  }
 }
 
 ul, li {
   padding: 0;
   margin: 0;
   list-style: none;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+p { margin: 0;}
+/* 
+header {
+  padding: 1rem;
+} */
+
+nav {
+  padding: 1rem;
+  display: flex;
+  box-shadow: 0 .5px .5rem #000;
+  /* flex-direction: column; */
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+
+  position: relative;
+
+  & img {
+    max-width: 50px;
+    cursor: pointer;
+  }
+
+  & .navbar-enlaces {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+
+    position: fixed;
+    width: 100%;
+    height: 100dvh;
+
+    background-color: #F1F1F1;
+    top: 0;
+    left: 0;
+
+    transform: translateX(100%); /* Inicialmente oculto hacia la izquierda */
+    transition: transform 0.4s ease-in-out; /* Animación */
+    z-index: 1000; /* para que quede por encima */
+
+    img {
+      max-width: 30px;
+      margin: 1rem;
+    }
+
+
+    & .contenedor-enlaces {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      text-align: center;
+      align-items: center;
+
+      & a {
+        background-color: #D1D1D1;
+        width: 100%;
+        padding: .5rem;
+        font-weight: 500;
+
+        &:hover {
+          text-decoration: underline;
+          color: #FFF;
+        }
+      }
+    }
+  }
+
+  & .navbar-enlaces.active {
+    transform: translateX(0%);
+  }
+}
+
+main {
+  min-height: 100dvh;
+  padding: 1rem;
+
+  & h2 {
+    font-size: 1.5rem;
+    text-wrap: balance;
+  }
+
+  & h1 {
+    text-align: center;
+  }
+
+  overflow-x: auto;
+
+  & .contenedor-acercaDe {
+    box-shadow: 0 0 5px #000;
+    border-radius: .4rem;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+
+    & h2 {
+      padding: .5rem;
+      margin: 0;
+      border-bottom: 1px solid #000;
+    }
+
+    & p {
+      text-wrap: pretty;
+
+      & a {
+        font-weight: 500;
+
+        &:hover {
+          color: #818912;
+        }
+      }
+    }
+  }
+  table {
+    border-collapse: collapse;
+  }
+
+  /* Formulario Agregar País */
+  & #formAgregarPais {
+    & .required {
+      &::after {
+        color: red;
+        content: ' *';
+      }
+    }
+    & div {
+      display: flex;
+      flex-direction: column;
+
+      & label {
+        font-weight: 500;
+        padding: .25rem;
+      }
+      & input {
+        padding: 1rem;
+        border: none;
+        box-shadow: inset 0 0 10px #D1D1D1;
+        border-radius: .25rem;
+      }
+    }
+
+    & #contenedor-gini {
+      & .item-gini {
+        flex-direction: row;
+        justify-content: center;
+        gap: 1rem;
+        & div {
+          flex-shrink: 0;
+        }
+      }
+
+      & .contenedorBtnGini {
+        flex-direction: row;
+        gap: 1rem;
+        padding: 1rem;
+
+        & .btnAgregarGini, .btnEliminarGini {
+          cursor: pointer;
+          padding: .75rem;
+          border: none;
+          box-shadow: 0 0 10px #A1A1A1;
+          border-radius: .25rem;
+          transition: background 300ms ease-in-out;
+        }
+
+        & .btnAgregarGini {
+          background-color: #a7ffb3;
+          &:hover {
+            background-color: #64ff79;
+          }
+        }
+
+        & .btnEliminarGini {
+          background-color: #ffa7a7;
+          &:hover {
+            background-color: #ff6464;
+          }
+        }
+      }
+    }
+
+    & .contenedor-zonasHorarias {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      grid-template-rows: repeat(7, 1fr);
+      gap: .75rem;
+      
+      & input[type="checkbox"] {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        padding: 0;
+        border: 0;
+        clip: rect(0 0 0 0);
+        clip-path: inset(50%);
+        overflow: hidden;
+        white-space: nowrap;
+      }
+
+      /* Estilo del label como “botón */
+
+      & input[type="checkbox"] + label {
+        display: inline-flex;
+        align-items: center;
+        cursor: pointer;
+        user-select: none;
+        padding: .5rem .75rem;
+        border-radius: .5rem;
+        background: #eee;
+        transition: background-color .2s ease, color .2s ease;
+      }
+
+      /* Activo cuando el checkbox está marcado */
+      & input[type="checkbox"]:checked + label {
+        background: #9bffd5;
+        color: #000;
+      }
+
+      /* Accesibilidad al navegar con teclado */
+      & input[type="checkbox"]:focus-visible + label {
+        outline: 2px solid #000;
+        outline-offset: 2px;
+      }
+
+    }
+  }
+}
+
+footer {
+  position: static;
+  padding: 1rem;
+  min-height: 3rem;
+
+
+  background-color: #000;
+  color: #FFF;
+  font-weight: 500;
+  text-align: center;
 }

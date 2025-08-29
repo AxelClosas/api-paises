@@ -56,8 +56,8 @@
         </td>
         <td><%= pais.creadoPor %></td>
         <td> <!-- TODO: Agregar actualizar y eliminar -->
-          Editar
-          Eliminar
+          <a href="/api/paises/formEditar/<%= pais._id %>">Editar</a>
+          <a href="/api/paises/formEliminar/<%= pais._id %>">Eliminar</a>
         </td>
       </tr>
   <% }) %>

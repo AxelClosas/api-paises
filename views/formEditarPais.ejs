@@ -1,0 +1,11 @@
+<main>
+  <form action="/api/paises/editarPais/<%= pais._id %>?_method=PUT" method="POST" id="formAgregarPais">
+    <%- include('partials/camposFormulario.ejs', { pais, obtenerMayorGini, obtenerAnioMayorGini }) %>
+    <div>
+      <button type="submit">Confimar</button>
+      <button type="reset">Limpiar campos</button>
+      <a href="/api/paises">Cancelar</a>
+    </div>
+  </form>
+</main>
+<script type="module" src="/js/formPais.js"></script>

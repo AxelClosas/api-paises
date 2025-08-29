@@ -1,4 +1,12 @@
 <%
+const obtenerValor = (campo) => {
+  if (typeof campo !== null)
+  if (typeof pais !== 'undefined' && pais[campo] != null) {
+    return Array.isArray(pais[campo]) ? pais[campo].join(', ') : pais[campo]
+  }
+  return ''
+}
+
 const zonasHorarias = [
   { id: 1, zonaH: 'UTC-12:00'},
   { id: 2, zonaH: 'UTC-11:00'},
@@ -60,31 +68,50 @@ const camposForm = [
 
 <% camposForm.forEach(campo => { %>
 <div>
-  <label for="<%= campo.name %>"><%= campo.label %></label>
+  <label
+    for="<%= campo.name %>"
+    <% if (campo.required) { %>
+      class="required"
+    <% } %>
+    ><%= campo.label %></label>
   <% if (campo.name === 'gini') { %>
   <div id="contenedor-gini">
     <div class="item-gini">
-      <label for="gini[0][anio]">Año</label>
-      <input
-        type="<%= campo.type %>"
-        id="gini[0][anio]"
-        name="gini[0][anio]"
-        placeholder="<%= campo.placeholderAnio %>"
-        <% if (campo.required) { %>
-        required
-        <% } %>
-        >
-      <label for="gini[0][valor]">Valor</label>
-      <input
-        type="<%= campo.type %>"
-        step="0.1"
-        id="gini[0][valor]"
-        name="gini[0][valor]"
-        placeholder="<%= campo.placeholderValor %>"
-        <% if (campo.required) { %>
-        required
-        <% } %>
-        >
+      <div>
+        <label for="gini[0][anio]">Año</label>
+        <input
+          type="<%= campo.type %>"
+          id="gini[0][anio]"
+          name="gini[0][anio]"
+          <% if (typeof pais !== 'undefined') { %>
+            <% if (typeof obtenerAnioMayorGini(pais.gini) !== 'undefined') { %>
+            value="<%= obtenerAnioMayorGini(pais.gini) || '' %>"
+            <% } %>
+          <% } %>
+          placeholder="<%= campo.placeholderAnio %>"
+          <% if (campo.required) { %>
+          required
+          <% } %>
+          >
+      </div>
+      <div>
+        <label for="gini[0][valor]">Valor</label>
+        <input
+          type="<%= campo.type %>"
+          step="0.1"
+          id="gini[0][valor]"
+          name="gini[0][valor]"
+          <% if (typeof pais !== 'undefined') { %>
+            <% if (typeof obtenerMayorGini(pais.gini) !== 'Sin Dato') { %>
+            value="<%= obtenerMayorGini(pais.gini) %>"
+            <% } %>
+          <% } %>
+          placeholder="<%= campo.placeholderValor %>"
+          <% if (campo.required) { %>
+          required
+          <% } %>
+          >
+      </div>
     </div>
   </div>
   <% } else if (campo.name === 'banderas') { %>
@@ -94,6 +121,9 @@ const camposForm = [
       type="text"
       id="PNG<%= campo.name %>"
       name="banderas[png]"
+      <% if (typeof pais !== 'undefined') { %>
+        value="<%= pais.banderas.get('png') || '' %>"
+      <% } %>
       placeholder="<%= campo.placeholderPNG %>"
     >
   </div>
@@ -103,6 +133,9 @@ const camposForm = [
       type="text"
       id="SVG<%= campo.name %>"
       name="banderas[svg]"
+      <% if (typeof pais !== 'undefined') { %>
+        value="<%= pais.banderas.get('svg') || '' %>"
+      <% } %>
       placeholder="<%= campo.placeholderSVG %>"
     >
   </div>
@@ -112,6 +145,9 @@ const camposForm = [
       type="text"
       id="altMapa<%= campo.name %>"
       name="banderas[alt]"
+      <% if (typeof pais !== 'undefined') { %>
+        value="<%= pais.banderas.get('alt') || '' %>"
+      <% } %>
       placeholder="<%= campo.alt %>"
     >
   </div>
@@ -123,6 +159,9 @@ const camposForm = [
           type="text"
           id="google<%= campo.name %>"
           name="mapas[googleMaps]"
+          <% if (typeof pais !== 'undefined') { %>
+            value="<%= pais.mapas.googleMaps || ''%>"
+          <% } %>
           placeholder="<%= campo.placeholderGoogle %>"
         >
       </div>
@@ -132,20 +171,30 @@ const camposForm = [
         type="text"
         id="openStreetMaps<%= campo.name %>"
         name="mapas[openStreetMaps]"
+        <% if (typeof pais !== 'undefined') { %>
+        value="<%= pais.mapas.openStreetMaps || '' %>"
+        <% } %>
         placeholder="<%= campo.placeholderOpenStreetMaps %>"
         >
       </div>
     </div>
   <% } else if (campo.name === 'zonasHorarias') { %>
-    <div>
+    <div class="contenedor-zonasHorarias">
     <% zonasHorarias.forEach(zona => { %>
-      <label for="zona<%= zona.id %>"><%= zona.zonaH %></label>
       <input
       id="zona<%= zona.id %>"
       name="zonasHorarias[]"
       type="<%= campo.type %>"
       value="<%= zona.zonaH %>"
+      <% if (typeof pais !== 'undefined') { %>
+        <% pais.zonasHorarias.forEach( zonaP => { %>
+          <% if (zonaP === zona.zonaH) { %>
+          checked
+          <% } %>
+        <% }) %>
+      <% } %>
       >
+      <label for="zona<%= zona.id %>"><%= zona.zonaH %></label>
       <% }) %>
     </div>
   <% } else { %>
@@ -154,6 +203,7 @@ const camposForm = [
       name="<%= campo.name %>"
       type="<%= campo.type %>"
       placeholder="<%= campo.placeholder %>"
+      value="<%= obtenerValor(campo.name) || '' %>"
       <% if (campo.required) { %>
       required
       <% } %>

@@ -12,9 +12,10 @@ export const parseGiniToValidObject = (req, res, next) => {
       if(item['anio'] !== '' && item['valor'] !== '')
         giniFormateado[item['anio']] = Number(item['valor'])
     })
-    req.body['gini'] = giniFormateado
-  } else {
+    req.body['gini'] = Object.keys(giniFormateado).length === 0 ? { '0': undefined } : giniFormateado
     console.log(req.body['gini'])
+  } else {
+    req.body['gini'] = undefined
   }
 
   next()

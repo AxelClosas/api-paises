@@ -1,8 +1,39 @@
 <nav>
-  <a href="/">Inicio</a>
-  <a href="/api/paises/formAgregar">Agregar País</a>
-  <a href="/api/paises">Listado de Países</a>
-  <a href="/#acercaDe">Acerca de</a>
-  <a href="/api/paises/panelDeControl">Panel de Control</a>
-  <a href="https://github.com/AxelClosas/api-paises" target="_blank">GitHub</a>
+  <div>
+    <a href="/"><img src="/images/america.png" alt="Icono del Continente Americano - Redirige al inicio del sitio"></a>
+  </div>
+  <div class="navbar-menu">
+    <img src="/images/menu.png" alt="Icono Menú hamburguesa" id="menu-hamburguesa" class="">
+    <div id="menu-enlaces" class="navbar-enlaces">
+
+      <img src="/images/cerrar.png" alt="Icono Cerrar Menú hamburguesa" id="cerrar-menu-hamburguesa">
+      <div class="contenedor-enlaces">
+        <a href="/">Inicio</a>
+        <a href="/api/paises/formAgregar">Agregar País</a>
+        <a href="/api/paises">Listado de Países</a>
+        <a href="/">Acerca de</a>
+        <a href="/api/paises/panelDeControl">Panel de Control</a>
+        <a href="https://github.com/AxelClosas/api-paises" target="_blank">GitHub</a>
+      </div>
+    </div>
+  </div>
 </nav>
+
+<script>
+  const $ = el => document.querySelector(el)
+
+  const menu = $('#menu-hamburguesa')
+  const enlaces = $('#menu-enlaces')
+  const cerrarMenu = $('#cerrar-menu-hamburguesa')
+
+  menu.addEventListener('click', () => {
+    console.log(enlaces)
+    enlaces.classList.toggle('active')
+    menu.classList.toggle('active')
+  })
+
+  cerrarMenu.addEventListener('click', () => {
+    enlaces.classList.toggle('active')
+    menu.classList.toggle('active')
+  })
+</script>

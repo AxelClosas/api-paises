@@ -1,66 +1,43 @@
-// window.addEventListener('load', () => {
-//   let contador = 1
-//   const container = document.getElementById("contenedor-gini")
-//   const buttonAgregar = document.createElement('button')
-//   buttonAgregar.textContent = 'Nuevo gini'
-//   buttonAgregar.type = 'button'
-//   buttonAgregar.onclick = agregarGini
-//   container.appendChild(buttonAgregar)
-
-//   const buttonEliminar = document.createElement('button')
-//   buttonEliminar.textContent = 'Eliminar gini'
-//   buttonEliminar.type = 'button'
-//   buttonEliminar.onclick = eliminarGini
-//   container.appendChild(buttonEliminar)
-
-//   function agregarGini() {  
-//     const div = document.createElement("div")
-//     div.classList.add("item-gini")
-
-//     div.innerHTML = `
-//       <label for="gini[${contador}][anio]">Año</label>
-//       <input type="number" id="gini[${contador}][anio]" name="gini[${contador}][anio]" placeholder="Ej: 2024" required>
-//       <label for="gini[${contador}][valor]">Valor</label>
-//       <input type="number" step="0.1" id="gini[${contador}][valor]" name="gini[${contador}][valor]" placeholder="Ej: 45.4" required>
-//     `
-//     container.insertBefore(div, buttonAgregar)
-//     contador++
-//   }
-
-//   function eliminarGini() {
-//     if (contador > 1) {
-//       const items = container.getElementsByClassName('item-gini')
-//       items[items.length -1].remove()
-//       contador--
-//     }
-//   }
-// })
 window.addEventListener('load', () => {
   let contador = 1
   const container = document.getElementById("contenedor-gini")
   const buttonAgregar = document.createElement('button')
-  buttonAgregar.textContent = 'Nuevo gini'
+  const contenedorBtnGini = document.createElement('div')
+
+  contenedorBtnGini.classList.add('contenedorBtnGini')
+
+  buttonAgregar.textContent = 'Agregar GINI'
   buttonAgregar.type = 'button'
   buttonAgregar.onclick = agregarGini
-  container.appendChild(buttonAgregar)
+  buttonAgregar.classList.add('btnAgregarGini')
+  contenedorBtnGini.appendChild(buttonAgregar)
 
   const buttonEliminar = document.createElement('button')
-  buttonEliminar.textContent = 'Eliminar gini'
+  buttonEliminar.textContent = 'Eliminar GINI'
   buttonEliminar.type = 'button'
   buttonEliminar.onclick = eliminarGini
-  container.appendChild(buttonEliminar)
+  buttonEliminar.classList.add('btnEliminarGini')
+  contenedorBtnGini.appendChild(buttonEliminar)
+
+  container.appendChild(contenedorBtnGini)
 
   function agregarGini() {  
     const div = document.createElement("div")
     div.classList.add("item-gini")
 
     div.innerHTML = `
-      <label for="gini[${contador}][anio]">Año</label>
-      <input type="number" id="gini[${contador}][anio]" name="gini[${contador}][anio]" placeholder="Ej: 2024" required>
-      <label for="gini[${contador}][valor]">Valor</label>
-      <input type="number" step="0.1" id="gini[${contador}][valor]" name="gini[${contador}][valor]" placeholder="Ej: 45.4" required>
+    
+      <div>
+        <label for="gini[${contador}][anio]">Año</label>
+        <input type="number" id="gini[${contador}][anio]" name="gini[${contador}][anio]" placeholder="Ej: 2024" required>
+      </div>
+      <div>
+        <label for="gini[${contador}][valor]">Valor</label>
+        <input type="number" step="0.1" id="gini[${contador}][valor]" name="gini[${contador}][valor]" placeholder="Ej: 45.4" required>
+      </div>
+    
     `
-    container.insertBefore(div, buttonAgregar)
+    container.insertBefore(div, contenedorBtnGini)
     contador++
   }
 
@@ -72,3 +49,16 @@ window.addEventListener('load', () => {
     }
   }
 })
+
+/*
+<div class="item-gini">
+  <div>
+    <label for="gini[0][anio]">Año</label>
+    <input type="number" id="gini[0][anio]" name="gini[0][anio]" placeholder="Ej: 2024">
+  </div>
+  <div>
+    <label for="gini[0][valor]">Valor</label>
+    <input type="number" step="0.1" id="gini[0][valor]" name="gini[0][valor]" placeholder="Ej: 45.4">
+  </div>
+</div>
+*/

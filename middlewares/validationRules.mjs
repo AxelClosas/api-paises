@@ -60,7 +60,7 @@ export const agregarValidationRules = (req, res) => [
   .custom((value) => {
     // Verificar que todos los valores sean números
     for (const [key, val] of Object.entries(value)) { // Por cada llave-valor de las entradas del objeto
-      if (typeof val !== 'number') { // Si el tipo de val es distinto de number, retorna el error.
+      if (typeof val !== 'number' && typeof val !== 'undefined') { // Si el tipo de val es distinto de number, retorna el error.
         throw new Error(`El valor de ${key} debe ser un número`)
       }
       if (val < 0 || val > 100) { // Si el valor es menor a 0 o mayor a 100 retorna el error.

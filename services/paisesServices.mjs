@@ -101,7 +101,20 @@ export function obtenerMayorGini(gini) {
     
     return gini.get(String(mayor)) // Casteo a String el año obtenido
   } else {
-    return 'Sin Dato' // Retorna sin dato en caso de que gini sea undefined
+    return '' // Retorna '' en caso de que gini sea undefined
+  }
+}
+
+export function obtenerAnioMayorGini(gini) {
+  if (typeof gini !== 'undefined') {
+    const ginis = []
+    for (const [key, value] of gini) {
+      ginis.push(Number(key)) // Guardo los años disponibles
+    }    
+    let mayor = 0 // Se declara e inicializa la variable mayor para guardar el último año
+    ginis.forEach(e => e > mayor ? mayor = e : mayor) // Comparo cada elemento con mayor y guardo el más alto
+    
+    return mayor // Casteo a String el año obtenido
   }
 }
 export function obtenerCantidadGini(paises) {
@@ -148,4 +161,12 @@ export async function cantidadDocumentos() {
 
 export async function eliminarPais(id) {
   return await PaisRepository.eliminar(id)
+}
+
+export async function obtenerPaisPorId(id) {
+  return await PaisRepository.obtenerPorId(id)
+}
+
+export async function actualizarPaisPorId(id, atributos) {
+  return await PaisRepository.actualizar(id, atributos)
 }

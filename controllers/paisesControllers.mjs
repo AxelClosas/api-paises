@@ -1,8 +1,8 @@
 // import { procesoGuardarPaisesDesdeAPIOriginalEnMongoDB } from '../services/paisesServices.mjs'
-import Pais from '../models/Pais.mjs'
+import { isValidObjectId } from 'mongoose'
 import PaisMolde from '../models/PaisMolde.mjs'
 import PaisRepository from '../repositories/PaisRepository.mjs'
-import { obtenerListadoDePaises, procesoGuardarPaisesDesdeAPIOriginalEnMongoDB, procesoEliminarPaisesAgregadosEnMongoDB, obtenerSumatoriaAtributo, promedioGini, obtenerMayorGini, cantidadDocumentos } from '../services/paisesServices.mjs'
+import { obtenerListadoDePaises, procesoGuardarPaisesDesdeAPIOriginalEnMongoDB, procesoEliminarPaisesAgregadosEnMongoDB, obtenerSumatoriaAtributo, obtenerPaisPorId, actualizarPaisPorId, promedioGini, obtenerMayorGini, obtenerAnioMayorGini, cantidadDocumentos, eliminarPais } from '../services/paisesServices.mjs'
 
 export async function procesoGuardarPaisesDesdeAPIOriginalEnMongoDBController(req, res) {
   console.log('⬆️ HTTP POST /api/cargarPaises - Proceso guardar países desde API Original en MongoDB')
@@ -132,7 +132,7 @@ export async function vistaPanelDeControlController(req, res) {
 
 export async function vistalFormAgregarPaisController(req, res) {
   const title = 'Agregar Nuevo País'
-  return await res.render('formAgregarPais', { title })
+  return await res.render('formAgregarPais', { title, obtenerAnioMayorGini, obtenerMayorGini})
 }
 
 export async function agregarNuevoPaisController(req, res) {
@@ -150,7 +150,10 @@ export async function agregarNuevoPaisController(req, res) {
     if (req.accepts('text/html')) {
       return await res.redirect('/api/paises')
     } else if (req.accepts('application/json')) {
-      return await res.status(200).json(resultado)
+      return await res.status(200).json({
+        estado: 201,
+        nuevoPais: resultado
+      })
     } else {
       res.status(406).json( { error: { status: 406, mensaje: "Not Acceptable" }})
     }
@@ -159,6 +162,115 @@ export async function agregarNuevoPaisController(req, res) {
     return res.status(500).json({
       estado: error.status,
       mensaje: error.message
+    })
+  }
+}
+
+export async function vistaFormEliminarPaisPorIdController(req, res) {
+  const title = 'Confirmar eliminación'
+  try {
+    if (isValidObjectId(req.params.id)) {
+      const pais = await obtenerPaisPorId(req.params.id)
+      if (pais !== null) {
+        return await res.render('formEliminarPais', { title, pais })
+      }
+    } else {
+      throw {
+        status: 422,
+        message: 'El ID ingresado no corresponde a un ObjectId de Mongoose'
+      }
+    }
+  } catch (error) {
+    return await res.status(500).json({
+      estado: error.status,
+      message: error.message
+    })
+  }
+}
+
+export async function eliminarPaisPorIdController(req, res) {
+  console.log('❌ HTTP DELETE /api/paises/eliminarPais/:id - Eliminar País por ID')
+  try {
+    if (isValidObjectId(req.params.id)) {
+      const pais = await obtenerPaisPorId(req.params.id)
+      if (pais !== null) {
+        await eliminarPais(pais._id)
+
+        if (req.accepts('text/html')) {
+          return res.redirect('/api/paises')          
+        } else if (req.accepts('application/json')) {
+          return res.status(204).json({
+            estado: 204,
+            mensaje: `Se eliminó correctamente el país ${pais.nombreOficial}`
+          })
+        } else {
+          res.status(406).json( { error: { status: 406, mensaje: "Not Acceptable" }})
+        }
+      } else {
+        throw {
+          status: 404,
+          message: 'No se encontró el País. Revisa el ID ingresado.'
+        }
+      }
+    } else {
+      throw {
+        status: 422,
+        message: 'El ID ingresado no corresponde a un ObjectId de Mongoose'
+      }
+    }
+  } catch (error) {
+    return res.status(500).json({
+      estado: error.status,
+      message: error.message
+    })
+  }
+  
+}
+
+export async function vistaFormEditarPaisController(req, res) {
+  const title = 'Editar País'
+  try {
+    if (isValidObjectId(req.params.id)) {
+      const pais = await obtenerPaisPorId(req.params.id)
+      return await res.render('formEditarPais', { title, pais, obtenerMayorGini, obtenerAnioMayorGini })
+    } else {
+      throw {
+        status: 422,
+        message: 'El ID ingresado no corresponde a un ObjectId de Mongoose'
+      }
+    }
+  } catch (error) {
+    return res.status(500).json({
+      estado: error.status,
+      message: error.message
+    })
+  }
+}
+
+export async function editarPaisController(req, res) {
+  try {
+    if (isValidObjectId(req.params.id)) {
+      const paisId = req.params.id
+      const atributos = req.body
+      const paisEditado = await actualizarPaisPorId(paisId, atributos)
+      if (paisEditado !== 'null') {
+        if (req.accepts('text/html')) {
+          return await res.redirect('/api/paises')
+        } else if (req.accepts('application/json')) {
+          return await res.status(200).json({
+            estado: 200,
+            mensaje: 'País editado correctamente',
+            datos: paisEditado
+          })
+        } else {
+          res.status(406).json( { error: { status: 406, mensaje: "Not Acceptable" }})
+        }
+      }
+    }
+  } catch (error) {
+    return res.status(500).json({
+      estado: error.status,
+      message: error.message
     })
   }
 }
