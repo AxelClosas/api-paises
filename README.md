@@ -23,11 +23,12 @@
 2. Node.js
 
 ## Pasos para instalación
-1. Clonar el repositorio
+1. Clonar el repositorio e ingresar a la carpeta
 ```bash
 git clone git@github.com:AxelClosas/api-paises.git
+cd api-paises
 ```
-2. Crear una variable de entorno .env y agregarle este contenido
+2. Crear una variable de entorno .env en la raíz del proyecto y pegar el siguiente contenido
 ```
 ENDPOINT_PAISES="https://restcountries.com/v3.1/region/america"
 PORT=3000
@@ -41,4 +42,5 @@ npm install
 ```bash
 npm run dev
 ```
+5. Ingresar a la url http://localhost:3000
 
