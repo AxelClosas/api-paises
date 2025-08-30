@@ -1,6 +1,8 @@
 <main>
+  <!-- Partial para mostrar errores -->
+  <%- include('partials/errores.ejs', { errores: errores }) %>
   <form action="/api/paises/editarPais/<%= pais._id %>?_method=PUT" method="POST" id="formAgregarPais">
-    <%- include('partials/camposFormulario.ejs', { pais, obtenerMayorGini, obtenerAnioMayorGini }) %>
+    <%- include('partials/camposFormulario.ejs', { pais: pais || {}, old: old || {}, obtenerMayorGini, obtenerAnioMayorGini }) %>
     <div>
       <button type="submit">Confimar</button>
       <button type="reset">Limpiar campos</button>

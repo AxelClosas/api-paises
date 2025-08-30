@@ -2,8 +2,10 @@
   <h2>Formulario para agregar un nuevo País</h2>
   <p>Todos los campos con <strong style="color: red;">*</strong> son obligatorios</p>
   <br>
+  <!-- Partial para mostrar errores -->
+  <%- include('partials/errores.ejs', { errores: errores }) %>
   <form action="/api/paises/nuevoPais" method="POST" id="formAgregarPais">
-    <%- include('partials/camposFormulario.ejs') %>
+    <%- include('partials/camposFormulario.ejs', { pais: pais || {}, old: old || {} }) %>
     <div>
       <button type="submit">Confimar</button>
       <button type="reset">Limpiar campos</button>

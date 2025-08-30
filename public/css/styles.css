@@ -264,6 +264,11 @@ main {
 
     }
   }
+  & .alert {
+    padding: 1rem;
+    background-color: #ffa7a7;
+    border-radius: .25rem;
+  }
 }
 
 footer {

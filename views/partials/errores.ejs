@@ -1,0 +1,9 @@
+<% if (typeof errores !== 'undefined' && errores.length > 0) { %>
+  <div class="alert">
+    <ul>
+      <% errores.forEach(function(error) { %>
+        <li><%= error.msg %></li>
+      <% }); %>
+    </ul>
+  </div>
+<% } %>

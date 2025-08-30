@@ -2,6 +2,7 @@
 import { isValidObjectId } from 'mongoose'
 import PaisMolde from '../models/PaisMolde.mjs'
 import PaisRepository from '../repositories/PaisRepository.mjs'
+import { validationResult } from 'express-validator'
 import { obtenerListadoDePaises, procesoGuardarPaisesDesdeAPIOriginalEnMongoDB, procesoEliminarPaisesAgregadosEnMongoDB, obtenerSumatoriaAtributo, obtenerPaisPorId, actualizarPaisPorId, promedioGini, obtenerMayorGini, obtenerAnioMayorGini, cantidadDocumentos, eliminarPais } from '../services/paisesServices.mjs'
 
 export async function procesoGuardarPaisesDesdeAPIOriginalEnMongoDBController(req, res) {
@@ -132,17 +133,31 @@ export async function vistaPanelDeControlController(req, res) {
 
 export async function vistalFormAgregarPaisController(req, res) {
   const title = 'Agregar Nuevo País'
-  return await res.render('formAgregarPais', { title, obtenerAnioMayorGini, obtenerMayorGini})
+  return await res.render('formAgregarPais', { title, obtenerAnioMayorGini, obtenerMayorGini, errores: [], pais: {}, old: {} })
 }
 
 export async function agregarNuevoPaisController(req, res) {
-  try {
+  try {    
     const paisEnBD = await PaisRepository.buscarPorQuery({nombreOficial: req.body.nombreOficial})
-    if (paisEnBD.length !== 0)
-      throw {
-        status: 409,
-        message: 'Conflicto. El país ingresado ya existe en la Base de Datos.'
+    if (paisEnBD.length !== 0) {
+      if (req.accepts('text/html')) {
+        // Renderizar directamente la vista con el error
+        return res.status(409).render('formAgregarPais', {
+          title: 'Agregar País',
+          obtenerAnioMayorGini,
+          obtenerMayorGini,
+          errores: [{ msg: 'Conflicto. El nombre del país ingresado ya existe en la Base de Datos.' }],
+          pais: {},
+          old: req.body
+        })
+      } else {
+        // Para JSON, mantener el comportamiento original
+        throw {
+          status: 409,
+          message: 'Conflicto. El nombre del país ingresado ya existe en la Base de Datos.'
+        }
       }
+    }
 
     const nuevoPais = new PaisMolde(req.body)
     const resultado = await PaisRepository.agregar(nuevoPais)
@@ -159,9 +174,20 @@ export async function agregarNuevoPaisController(req, res) {
     }
 
   } catch (error) {
-    return res.status(500).json({
-      estado: error.status,
-      mensaje: error.message
+    if (req.accepts('application/json')) {
+      return res.status(500).json({
+        estado: error.status,
+        mensaje: error.message
+      })
+    }
+    // Pasar errores y datos antiguos a la vista
+    return res.status(500).render('formAgregarPais', {
+      title: 'Agregar País',
+      obtenerAnioMayorGini,
+      obtenerMayorGini,
+      errores: [{ msg: error.message }],
+      pais: {},
+      old: req.body
     })
   }
 }
@@ -232,7 +258,7 @@ export async function vistaFormEditarPaisController(req, res) {
   try {
     if (isValidObjectId(req.params.id)) {
       const pais = await obtenerPaisPorId(req.params.id)
-      return await res.render('formEditarPais', { title, pais, obtenerMayorGini, obtenerAnioMayorGini })
+      return await res.render('formEditarPais', { title, pais, obtenerMayorGini, obtenerAnioMayorGini, errores: [], old: {} })
     } else {
       throw {
         status: 422,
@@ -240,9 +266,14 @@ export async function vistaFormEditarPaisController(req, res) {
       }
     }
   } catch (error) {
-    return res.status(500).json({
-      estado: error.status,
-      message: error.message
+    // Si hay error, mostrarlo en la vista de edición y mantener los datos enviados
+    return res.status(500).render('formEditarPais', {
+      title: 'Editar País',
+      pais: {},
+      obtenerMayorGini,
+      obtenerAnioMayorGini,
+      errores: [{ msg: error.message }],
+      old: req.body
     })
   }
 }
@@ -268,9 +299,14 @@ export async function editarPaisController(req, res) {
       }
     }
   } catch (error) {
-    return res.status(500).json({
-      estado: error.status,
-      message: error.message
+    // Si hay error al editar, mostrarlo en la vista de edición y mantener los datos enviados
+    return res.status(500).render('formEditarPais', {
+      title: 'Editar País',
+      pais: {},
+      obtenerMayorGini,
+      obtenerAnioMayorGini,
+      errores: [{ msg: error.message }],
+      old: req.body
     })
   }
 }

@@ -1,8 +1,12 @@
 <%
 const obtenerValor = (campo) => {
-  if (typeof campo !== null)
-  if (typeof pais !== 'undefined' && pais[campo] != null) {
-    return Array.isArray(pais[campo]) ? pais[campo].join(', ') : pais[campo]
+  if (typeof campo !== null) {
+    if (typeof old !== 'undefined' && old[campo] != null && old[campo] !== '') {
+      return Array.isArray(old[campo]) ? old[campo].join(', ') : old[campo]
+    }
+    if (typeof pais !== 'undefined' && pais[campo] != null) {
+      return Array.isArray(pais[campo]) ? pais[campo].join(', ') : pais[campo]
+    }
   }
   return ''
 }
@@ -121,7 +125,7 @@ const camposForm = [
       type="text"
       id="PNG<%= campo.name %>"
       name="banderas[png]"
-      <% if (typeof pais !== 'undefined') { %>
+      <% if (typeof pais.banderas !== 'undefined') { %>
         value="<%= pais.banderas.get('png') || '' %>"
       <% } %>
       placeholder="<%= campo.placeholderPNG %>"
@@ -133,7 +137,7 @@ const camposForm = [
       type="text"
       id="SVG<%= campo.name %>"
       name="banderas[svg]"
-      <% if (typeof pais !== 'undefined') { %>
+      <% if (typeof pais.banderas !== 'undefined') { %>
         value="<%= pais.banderas.get('svg') || '' %>"
       <% } %>
       placeholder="<%= campo.placeholderSVG %>"
@@ -145,7 +149,7 @@ const camposForm = [
       type="text"
       id="altMapa<%= campo.name %>"
       name="banderas[alt]"
-      <% if (typeof pais !== 'undefined') { %>
+      <% if (typeof pais.banderas !== 'undefined') { %>
         value="<%= pais.banderas.get('alt') || '' %>"
       <% } %>
       placeholder="<%= campo.alt %>"
@@ -159,7 +163,7 @@ const camposForm = [
           type="text"
           id="google<%= campo.name %>"
           name="mapas[googleMaps]"
-          <% if (typeof pais !== 'undefined') { %>
+          <% if (typeof pais.mapas !== 'undefined') { %>
             value="<%= pais.mapas.googleMaps || ''%>"
           <% } %>
           placeholder="<%= campo.placeholderGoogle %>"
@@ -171,7 +175,7 @@ const camposForm = [
         type="text"
         id="openStreetMaps<%= campo.name %>"
         name="mapas[openStreetMaps]"
-        <% if (typeof pais !== 'undefined') { %>
+        <% if (typeof pais.mapas !== 'undefined') { %>
         value="<%= pais.mapas.openStreetMaps || '' %>"
         <% } %>
         placeholder="<%= campo.placeholderOpenStreetMaps %>"
@@ -186,7 +190,7 @@ const camposForm = [
       name="zonasHorarias[]"
       type="<%= campo.type %>"
       value="<%= zona.zonaH %>"
-      <% if (typeof pais !== 'undefined') { %>
+      <% if (typeof pais.zonasHorarias !== 'undefined') { %>
         <% pais.zonasHorarias.forEach( zonaP => { %>
           <% if (zonaP === zona.zonaH) { %>
           checked
