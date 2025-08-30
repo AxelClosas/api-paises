@@ -6,7 +6,7 @@
   <%- include('partials/errores.ejs', { errores: errores }) %>
   <form action="/api/paises/nuevoPais" method="POST" id="formAgregarPais">
     <%- include('partials/camposFormulario.ejs', { pais: pais || {}, old: old || {} }) %>
-    <div>
+    <div class="botones-form">
       <button type="submit">Confimar</button>
       <button type="reset">Limpiar campos</button>
       <a href="/api/paises">Cancelar</a>

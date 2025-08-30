@@ -56,9 +56,11 @@
           </ul>
         </td>
         <td><%= pais.creadoPor %></td>
-        <td> <!-- TODO: Agregar actualizar y eliminar -->
-          <a href="/api/paises/formEditar/<%= pais._id %>">Editar</a>
-          <a href="/api/paises/formEliminar/<%= pais._id %>">Eliminar</a>
+        <td > 
+          <div class="acciones">
+            <a href="/api/paises/formEditar/<%= pais._id %>">Editar</a>
+            <a href="/api/paises/formEliminar/<%= pais._id %>">Eliminar</a>
+          </div>
         </td>
       </tr>
   <% }) %>

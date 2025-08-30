@@ -99,6 +99,8 @@ nav {
         &:hover {
           text-decoration: underline;
           color: #FFF;
+
+          background-color: #979797;
         }
       }
     }
@@ -152,6 +154,44 @@ main {
   }
   table {
     border-collapse: collapse;
+
+    & td {
+      padding: .5rem;
+      
+      & .acciones {
+        display: flex;
+        gap: 1rem;
+
+        & a {
+          font-weight: 500;
+          border-radius: .25rem;
+  
+          &:nth-child(1) {
+            background-color: #64e3ff;
+            padding: .5rem;
+
+            &:hover {
+              background-color: #3ddcff;
+            }
+          }
+  
+          &:nth-child(2) {
+            background-color: #ff6464;
+            padding: .5rem;
+
+            &:hover {
+              background-color: #ff4646;
+            }
+          }
+
+          &:hover {
+            transition: background 300ms ease-in-out;
+          }
+        }
+
+
+      }
+    }
   }
 
   /* Formulario Agregar País */
@@ -248,6 +288,10 @@ main {
         border-radius: .5rem;
         background: #eee;
         transition: background-color .2s ease, color .2s ease;
+
+        &:hover {
+          background-color: #a7ffb3;
+        }
       }
 
       /* Activo cuando el checkbox está marcado */
@@ -262,6 +306,57 @@ main {
         outline-offset: 2px;
       }
 
+    }
+
+    & div.botones-form {
+      flex-direction: row;
+      gap: 1rem;
+      margin-top: 2rem;
+
+      & button {
+        padding: 1rem;
+        border-radius: .25rem;
+        border: none;
+        text-transform: uppercase;
+        font-weight: 500;
+        cursor: pointer;
+
+        &:hover {
+          transition: background 300ms ease-in-out;
+        }
+      }
+
+      & a {
+        padding: 1rem;
+        border-radius: .25rem;
+        border: none;
+        text-transform: uppercase;
+        font-weight: 500;
+        background-color: #ff8282;
+
+      
+        &:hover {
+          background-color: #ff3a3a;
+          transition: background 300ms ease-in-out;
+        }
+      
+      }
+
+      & button:nth-child(1) {
+        background-color: #64ff79;
+
+        &:hover {
+          background-color: #33ca47;
+        }
+      }
+
+      & button:nth-child(2) {
+        background-color: #f2ff64;
+
+        &:hover {
+          background-color: #b5c22c;
+        }
+      }
     }
   }
   & .alert {
